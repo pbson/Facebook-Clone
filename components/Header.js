@@ -4,15 +4,13 @@ import {
     Image,
     StyleSheet,
     TouchableOpacity,
-    TouchableHighlight,
-    TouchableNativeFeedback,
     StatusBar
 } from "react-native";
 import TopBar from "./TopBar";
 import { Navigation } from "react-native-navigation";
 
-const Header = () => {
-    const gotoScreen = screenName => {
+export default Header = () => {
+    gotoScreen = screenName => {
         // Navigation.push(this.props.componentId, {
         //     component: {
         //         name: screenName
@@ -26,56 +24,56 @@ const Header = () => {
             <TopBar />
             <View style={styles.tabContainer}>
                 <View style={styles.tabIconContainer}>
-                    <TouchableHighlight
-                        onPress={() => gotoScreen("Home")}>
-                        <Image
-                            style={styles.tabIconImg}
-                            source={require("../src/img/homeActive.png")}
-                        />
-                    </TouchableHighlight>
-                </View>
-                <View style={styles.tabIconContainer}>
-                    <TouchableNativeFeedback
-                        onPress={() => gotoScreen("AddFriend")}>
-                        <Image
-                            style={styles.tabIconImg}
-                            source={require("../src/img/group.png")}
-                        />
-                    </TouchableNativeFeedback>
-                </View>
-                <View style={styles.tabIconContainer}>
                     <TouchableOpacity
-                        onPress={() => gotoScreen("MarketPlace")}>
+                        onPress={() => this.gotoScreen("Home")}> FIX THIS HERE
                         <Image
                             style={styles.tabIconImg}
-                            source={require("../src/img/watch.png")}
+                            source={require("../../src/img/homeActive.png")}
                         />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.tabIconContainer}>
                     <TouchableOpacity
-                        onPress={() => gotoScreen("Notfound")}>
+                        onPress={() => this.gotoScreen("AddFriend")}>
                         <Image
                             style={styles.tabIconImg}
-                            source={require("../src/img/profile.png")}
+                            source={require("../../src/img/group.png")}
                         />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.tabIconContainer}>
                     <TouchableOpacity
-                        onPress={() => gotoScreen("Notification")}>
+                        onPress={() => this.gotoScreen("MarketPlace")}>
                         <Image
                             style={styles.tabIconImg}
-                            source={require("../src/img/notification.png")}
+                            source={require("../../src/img/watch.png")}
                         />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.tabIconContainer}>
                     <TouchableOpacity
-                        onPress={() => gotoScreen("NavigationMenu")}>
+                        onPress={() => this.gotoScreen("Notfound")}>
                         <Image
                             style={styles.tabIconImg}
-                            source={require("../src/img/more.png")}
+                            source={require("../../src/img/profile.png")}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tabIconContainer}>
+                    <TouchableOpacity
+                        onPress={() => this.gotoScreen("Notification")}>
+                        <Image
+                            style={styles.tabIconImg}
+                            source={require("../../src/img/notification.png")}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.tabIconContainer}>
+                    <TouchableOpacity
+                        onPress={() => this.gotoScreen("NavigationMenu")}>
+                        <Image
+                            style={styles.tabIconImg}
+                            source={require("../../src/img/more.png")}
                         />
                     </TouchableOpacity>
                 </View>
@@ -83,8 +81,6 @@ const Header = () => {
         </View>
     );
 }
-
-export default Header
 
 const styles = StyleSheet.create({
     headerContainer: {
