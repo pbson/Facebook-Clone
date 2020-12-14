@@ -29,7 +29,7 @@ const Navigator = () => {
                                 return <HomePageHeaderButton />
                             },
                             headerLeft: () => {
-                                return <Image style={styles.homeTabImage} source={require('../src/img/facebook-7.svg')} />
+                                return <Image style={styles.homeTabImage} source={require('../src/img/Facebook-Logo.png')} />
                             },
                             headerLeftContainerStyle: {
                                 paddingLeft: 10
