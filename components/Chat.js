@@ -12,13 +12,19 @@ import {
     responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Ionicons } from "@expo/vector-icons";
-import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 
-const Chat = ({ name, time, message, hasSeen, proPicUrl, seenProPicUrl, navigation }) => {
-
+const Chat = ({ conversationId, partnerId, phonenumber, time, message, hasSeen, proPicUrl, seenProPicUrl, navigation }) => {
+    let currentDate = new Date()
     const openChatView = () => {
-        navigation.navigate('ChatView')
+        navigation.navigate('ChatView', {
+            conversationId: conversationId,
+            partnerId: partnerId,
+            phonenumber: phonenumber,
+            proPicUrl: proPicUrl,
+        })
     }
+    const formatTime = new Date(time)
+
     return (
         <TouchableOpacity
             onPress={openChatView}
@@ -35,11 +41,15 @@ const Chat = ({ name, time, message, hasSeen, proPicUrl, seenProPicUrl, navigati
             </View>
             <View style={styles.descriptionContainer}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.name}>{phonenumber}</Text>
                 </View>
                 <View style={styles.detailsContainer}>
                     <Text style={styles.message}> You : {message} </Text>
-                    <Text style={styles.time}>{time}</Text>
+                    {(!currentDate.getDate() - formatTime.getDate() > 1) ?
+                        <Text style={styles.time}>{formatTime.toDateString()}</Text>
+                        :
+                        <Text style={styles.time}>{formatTime.toLocaleTimeString()}</Text>
+                    }
                 </View>
             </View>
             <View style={styles.seenProPicContainer}>

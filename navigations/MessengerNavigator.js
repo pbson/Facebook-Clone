@@ -5,10 +5,15 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { responsiveHeight, responsiveFontSize } from 'react-native-responsive-dimensions'
 import { Ionicons, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
-import MessengerHome from '../screens/MessengerHome';
-import MessengerHomeTab from '../navigations/MessengerHomeTab';
+import MessengerHomeTab from './MessengerHomeTab';
 import HeaderButton from '../components/HeaderButton';
 import ChatView from '../screens/ChatView'
+import Login from '../screens/Login'
+import HomeTab from './HomeTab'
+import HomePageHeaderButton from '../components/HomePageHeaderButton';
+
+
+// import {socket} from '../chatSocket/chatAction'
 
 const Navigator = () => {
     const Stack = createStackNavigator()
@@ -16,6 +21,39 @@ const Navigator = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen
+                    options={
+                        ({ navigation }) => ({
+                            title: null,
+                            headerRight: () => {
+                                return <HomePageHeaderButton />
+                            },
+                            headerLeft: () => {
+                                return <Image style={styles.homeTabImage} source={require('../src/img/facebook-7.svg')} />
+                            },
+                            headerLeftContainerStyle: {
+                                paddingLeft: 10
+                            },
+                            headerRightContainerStyle: {
+                                paddingRight: 10,
+                                paddingHorizontal: 10,
+                            }
+                        })
+                    }
+                    name='HomeTab'
+                    component={HomeTab}
+                />
+                <Stack.Screen
+                    name='Login'
+                    component={Login}
+                    options={
+                        {
+                            headerShown: false,
+                            headerStyle: {
+                                paddingTop: 0
+                            },
+                        }}
+                />
                 <Stack.Screen
                     options={
                         ({ navigation }) => ({
@@ -66,22 +104,22 @@ const Navigator = () => {
                             headerLeft: () => {
                                 return (
                                     <View style={styles.chatViewHeaderLeftContainer}>
-                                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                                        <TouchableOpacity onPress={() => { navigation.goBack() }}>
                                             <Ionicons name="md-arrow-back" size={responsiveFontSize(3)} color="#006AFF" />
                                         </TouchableOpacity>
                                         <View style={styles.chatViewProPicContainer}>
-                                            <Image style={styles.profilePic} source={{ uri: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
+                                            <Image style={styles.profilePic} source={{ uri: route.params.proPicUrl }} />
                                         </View>
                                         <View>
-                                            <Text style={styles.name}>Name</Text>
+                                            <Text style={styles.name}>{route.params.phonenumber}</Text>
                                             <Text style={styles.lastOnlineText}>Active 12 hour ago</Text>
                                         </View>
 
                                     </View>
                                 )
                             },
-                            headerLeftContainerStyle : {
-                                paddingHorizontal : 10
+                            headerLeftContainerStyle: {
+                                paddingHorizontal: 10
                             }
                         })
                     }
@@ -96,6 +134,10 @@ const styles = StyleSheet.create({
         width: responsiveHeight(5),
         height: responsiveHeight(5),
         borderRadius: 200
+    },
+    homeTabImage: {
+        width: responsiveHeight(16),
+        height: responsiveHeight(3.1),
     },
     profilePic: {
         borderRadius: 200,

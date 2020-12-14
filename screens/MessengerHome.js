@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     ScrollView,
     View,
     StyleSheet,
-    ViewComponent,
-    Text,
     TextInput,
+    FlatList
 } from "react-native";
 import {
     responsiveFontSize,
@@ -17,6 +16,28 @@ import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 import Chat from "../components/Chat";
 
 const MessengerHome = ({ navigation }) => {
+    const [data, setData] = useState([]);
+
+    const index = 0
+    const count = 20
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
+
+
+    useEffect(() => {
+        const url = `http://192.168.31.17:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const fetchResult = async () => {
+            const response  = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            setData(json.data);
+        }
+        fetchResult()
+    }, []);
     return (
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
@@ -39,26 +60,26 @@ const MessengerHome = ({ navigation }) => {
                     contentContainerStyle={{ marginVertical: 10 }}
                 >
                     <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
-                    <ActiveUserOnMessengerHome />
                 </ScrollView>
             </View>
-            <Chat
-                navigation={navigation}
-                hasSeen={true}
-                time='12:04'
-                message='You OK'
-                name='Pham Ba Son'
-                proPicUrl='https://images.unsplash.com/photo-1605428265679-09d3898e1f34?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h='
-                seenProPicUrl='https://images.unsplash.com/photo-1605428265679-09d3898e1f34?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h='
+            <FlatList 
+                style={styles.chatContainer}
+                data={data}
+                keyExtractor={({ id }, index) => id}
+                renderItem={({ item }) => (
+                    <Chat
+                        conversationId = {item.id}
+                        partnerId = {item.Partner.id}
+                        navigation={navigation}
+                        hasSeen={item.LastMessage.unread}
+                        time={item.LastMessage.created}
+                        message={item.LastMessage.message}
+                        phonenumber={item.Partner.phonenumber}
+                        proPicUrl={'http://' + item.Partner.avatar}
+                        seenProPicUrl={'http://' + item.Partner.avatar}
+                    />
+                )}
             />
-            <Chat />
         </ScrollView>
     );
 };
@@ -93,4 +114,7 @@ const styles = StyleSheet.create({
         width: responsiveWidth(100),
         marginVertical: 5,
     },
+    chatContainer: {
+        width:responsiveWidth(100)
+    }
 });
