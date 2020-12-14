@@ -14,12 +14,10 @@ import {
     responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Ionicons } from "@expo/vector-icons";
-import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
-import Chat from "../components/Chat";
-import FeedPost from "../components/FeedPost"
+import NotificationList from "../components/NotificationList";
 
 
-const Watch = ({ navigation }) => {
+const Notification = ({ navigation }) => {
     const [data, setData] = useState([]);
 
     const index = 0
@@ -48,18 +46,30 @@ const Watch = ({ navigation }) => {
             style={styles.container}
         >
             <View style={styles.headerContainer}>
-                <Text style={styles.headingText}>Watch</Text>
+                <Text style={styles.headingText}>Notifications</Text>
             </View>
             <FlatList
                 style={styles.chatContainer}
             />
-            <FeedPost/>
-            <FeedPost/>
+            <NotificationList
+                authorImg={require("../src/img/photostatus.jpg")}
+                from="Muhammad Taufik Lewenussa"
+                to="Angga Syahputra Utama"
+                time="2 jam yang lalu"
+                isRead = {true}
+            />
+            <NotificationList
+                authorImg={require("../src/img/photostatus.jpg")}
+                from="Muhammad Taufik Lewenussa"
+                to="Angga Syahputra Utama"
+                time="2 jam yang lalu"
+                isRead = {false}
+            />
         </ScrollView>
     );
 };
 
-export default Watch;
+export default Notification;
 
 const styles = StyleSheet.create({
     headerContainer: {

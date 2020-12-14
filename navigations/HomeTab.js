@@ -3,9 +3,11 @@ import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-di
 import { AsyncStorage, View, ScrollView, StyleSheet, StatusBar } from "react-native";
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 import MessengerHome from '../screens/MessengerHome';
 import Feed from '../screens/Feed';
 import Watch from '../screens/Watch';
+import Notification from '../screens/Notification';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -59,7 +61,7 @@ const Home = () => {
             />
             <Tab.Screen
                 name="Notification"
-                component={MessengerHome}
+                component={Notification}
                 options={{ tabBarLabel: 'Notification' }}
             />
             <Tab.Screen
