@@ -18,7 +18,7 @@ import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost"
 import Avatar from "../components/Avatar"
-
+import CreatePost from "../screens/CreatePost.js"
 
 const Feed = ({ navigation }) => {
     const [data, setData] = useState([]);
@@ -27,7 +27,10 @@ const Feed = ({ navigation }) => {
     const count = 20
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
 
-
+    const setModalVisible = () => {
+        createPost.toggleModal();
+        console.log(createPost.state.modalVisible);
+    }
     useEffect(() => {
         const url = `http://192.168.31.17:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
         const fetchResult = async () => {
@@ -44,14 +47,16 @@ const Feed = ({ navigation }) => {
         fetchResult()
     }, []);
     return (
+        
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
         >
+            <CreatePost ref={ref => { createPost = ref; }} />
             <View style={styles.headerContainer}>
                 <Avatar/>
                 <View style={styles.searchContainer}>
-                    <TextInput style={styles.search} placeholder="What's on your mind " />
+                    <TextInput onFocus={()=>setModalVisible()} style={styles.search} placeholder="What's on your mind " />
                 </View>
             </View>
             <View style={styles.break}></View>    
