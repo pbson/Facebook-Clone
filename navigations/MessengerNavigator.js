@@ -11,6 +11,7 @@ import ChatView from '../screens/ChatView'
 import Login from '../screens/Login'
 import HomeTab from './HomeTab'
 import HomePageHeaderButton from '../components/HomePageHeaderButton';
+import CreatePost from '../screens/CreatePost.js'
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -29,7 +30,9 @@ const Navigator = () => {
                                 return <HomePageHeaderButton />
                             },
                             headerLeft: () => {
+
                                 return <Image style={styles.homeTabImage} source={require('../src/img/Facebook-Logo.png')} />
+
                             },
                             headerLeftContainerStyle: {
                                 paddingLeft: 10
@@ -54,6 +57,7 @@ const Navigator = () => {
                             },
                         }}
                 />
+
                 <Stack.Screen
                     options={
                         ({ navigation }) => ({
