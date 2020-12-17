@@ -2,14 +2,19 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import MessengerHomeTab from "../navigations/MessengerHomeTab";
 
-const HomePageHeaderButton = () => {
+const HomePageHeaderButton = ({navigation}) => {
+  const openChatScreen = () => {
+    navigation.navigate('MessengerHomeTab')
+  }
+
   return (
     <View style={styles.headerLeftContainer}>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={openChatScreen} style={styles.button}>
         <Ionicons name="ios-search" size={responsiveFontSize(3)} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={openChatScreen} style={styles.button}>
         <Ionicons name="ios-chatbubbles" size={responsiveFontSize(3)} />
       </TouchableOpacity>
     </View>

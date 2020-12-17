@@ -21,40 +21,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
-const Feed = ({ navigation,userId, userPhonenumber, userAvatar }) => {
+const Feed = ({ navigation}) => {
     const [data, setData] = useState([]);
+    const [userInfo, setUser] = useState({});
 
     const index = 0
     const count = 20
 
-    const registerForPushNotificationsAsync = async () => {
-        const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-        if (status != 'granted') {
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-          // finalStatus = status;
-        }
-        if (status !== 'granted') {
-          alert('Failed to get push token for push notification!');
-          return;
-        }
-        let token = (await Notifications.getExpoPushTokenAsync()).data;
-        return token
-    };
-
     useEffect(() => {
-        const createToken = async () => {
-            let token = await registerForPushNotificationsAsync();
+        const getUserInfo = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
             if (savedToken === null) {
-                navigation.navigate('Login', {
-                    savedToken: token
-                })
+                navigation.navigate('Login')
             }
+            const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            if(json.code !== '1000'){
+                navigation.navigate('Login')
+            }
+            setUser(json.data);
         }
 
         const fetchResult = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `https://project-facebook-clone.herokuapp.com/it4788/chatsocket/get_list_conversation?token=${savedToken}&index=${index}&count=${count}`
+            const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${savedToken}&index=${index}&count=${count}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -65,8 +62,8 @@ const Feed = ({ navigation,userId, userPhonenumber, userAvatar }) => {
             const json = await response.json();
             setData(json.data);
         }
-        createToken()
         fetchResult()
+        getUserInfo()
     }, []);
     return (
 
@@ -77,13 +74,10 @@ const Feed = ({ navigation,userId, userPhonenumber, userAvatar }) => {
             {/* <CreatePost ref={ref => { createPost = ref; }} /> */}
             <View style={styles.headerContainer}>
                 <Avatar
-                    url = {userAvatar}
+                    url = {userInfo.avatar}
                 />
                 <View style={styles.searchContainer}>
-                    <TextInput onFocus={() => navigation.navigate(CreatePost,{
-                        userAvatar: userAvatar,
-                        userPhonenumber: userPhonenumber
-                    })} style={styles.search} placeholder="What's on your mind " />
+                    <TextInput onFocus={() => navigation.navigate(CreatePost)} style={styles.search} placeholder="What's on your mind " />
                 </View>
             </View>
             <View style={styles.break}></View>

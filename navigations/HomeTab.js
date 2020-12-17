@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions'
 import { AsyncStorage, View, ScrollView, StyleSheet, StatusBar } from "react-native";
 import { FontAwesome5, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -15,10 +15,7 @@ import Settings from '../screens/Settings';
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeTab = ({userId,userPhonenumber, userAvatar}) => {
-    useEffect(() => {
-        console.log(userId)
-    }, []);    
+const HomeTab = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -60,9 +57,6 @@ const HomeTab = ({userId,userPhonenumber, userAvatar}) => {
                 name="Feed"
                 options={{ title: "Feed" }}
                 component= {Feed}
-                userId={userId}
-                userAvatar={userAvatar}
-                userPhonenumber={userPhonenumber}
             />
             <Tab.Screen
                 name="Friends"

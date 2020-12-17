@@ -27,7 +27,7 @@ const Navigator = () => {
                         ({ navigation }) => ({
                             title: null,
                             headerRight: () => {
-                                return <HomePageHeaderButton />
+                                return <HomePageHeaderButton navigation={navigation} />
                             },
                             headerLeft: () => {
 

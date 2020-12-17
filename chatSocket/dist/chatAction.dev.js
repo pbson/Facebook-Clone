@@ -9,7 +9,7 @@ var _socket = _interopRequireDefault(require("socket.io-client"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var socket = (0, _socket["default"])('https://project-facebook-clone.herokuapp.com', {
+var socket = (0, _socket["default"])('http://192.168.0.140:3000', {
   forceNew: true,
   jsonp: false,
   transports: ['websocket']

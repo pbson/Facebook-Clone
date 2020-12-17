@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import {
     Keyboard, Animated, Text, StyleSheet, View, SafeAreaView, TouchableOpacity, TextInput,
-    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal
+    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal,Alert
 } from 'react-native'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import MasonryList from "react-native-masonry-list";
 
 
-const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
+const CreatePost = ({ navigation }) => {
+    const [text, setText] = useState('');
+    const [images, setImage] = useState([]);
+
     const pickImage = async () => {
         let permission = await ImagePicker.requestCameraRollPermissionsAsync()
-        if (permission.granted == false){
+        if (permission.granted == false) {
             return;
         }
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,15 +27,13 @@ const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
-            setImage(result.uri);
+            setImage([...images,{uri: result.uri, type: result.type}]);
         }
     };
     const takeImage = async () => {
         let permission = await ImagePicker.requestCameraPermissionsAsync()
-        if (permission.granted == false){
+        if (permission.granted == false) {
             return;
         }
         let result = await ImagePicker.launchCameraAsync({
@@ -44,10 +47,38 @@ const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
         console.log(result);
 
         if (!result.cancelled) {
-            setImage(result.uri);
+            setImage([...images,{uri: result.uri, type: result.type}]);
         }
     };
-    ///////////////////////////////////////////////// 
+    /////////////////////////////////////////////////
+    const sendPost = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/post/add_post?token=${savedToken}&described=${text}&status=happy`
+        console.log(JSON.stringify(images));
+        const response = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(images),
+            headers: {
+                Accept: 'application/json',
+                'content-type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if (json.code === '1000') {
+            console.log(json)
+            navigation.goBack()
+        } else {
+            Alert.alert(
+                "Add post fail",
+                json.message,
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        }
+    }
+    ////////////////////////////////////////////////
     const [modalVisible, setState] = useState(true)
     const dismis = () => {
         Keyboard.dismiss();
@@ -97,14 +128,14 @@ const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
                         <FontAwesome5Icon color="#000" name="times" size={20}></FontAwesome5Icon>
                     </TouchableOpacity>
                     <Text style={styles.naviTitle}>Create a Post</Text>
-                    <TouchableOpacity style={styles.btnPost} onPress={() => { console.log("Need Post api!") }} disabled={false}>
+                    <TouchableOpacity style={styles.btnPost} onPress={() => sendPost()} disabled={false}>
                         <Text style={{ fontSize: 16, color: "#1E90FF", fontWeight: 'bold' }}>Post</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.infoWrapper}>
-                    <Image style={styles.avatar} source={{ uri: `http://${userAvatar}` }}></Image>
+                    {/* <Image style={styles.avatar} source={{ uri: `http://${userInfo.avatar}` }}></Image> */}
                     <View>
-                        <Text style={styles.name}>{userPhonenumber}</Text>
+                        {/* <Text style={styles.name}>{id}</Text> */}
                         <View style={styles.areaWrapper}>
                             <TouchableOpacity style={styles.areaOption} onPress={() => pan.y.setValue(0)}>
                                 <FontAwesome5Icon style={{ marginRight: 3 }} name="globe-asia" size={14}> </FontAwesome5Icon>
@@ -121,14 +152,18 @@ const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
                         placeholderTextColor={"black"}
                         placeholder="What's on your mind?"
                         placeholderTextColor="#808080"
-                        onChangeText={text => { }}
+                        onChangeText={() => setText(text)}
                         multiline numberOfLines={1} style={{
                             ...styles.editor, fontSize: 20,
                             textAlign: 'left', fontWeight: 'normal',
 
                         }}>
                     </TextInput>
-
+                    <View style={styles.imageList}>
+                    <MasonryList
+                        images={images}
+                    />
+                    </View>
                     <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={140} style={{ position: 'absolute', top: screenHeight / 1.44 }}>
                         <View style={styles.bottomTab}>
                             <TouchableHighlight onPress={takeImage} >
@@ -163,10 +198,10 @@ const CreatePost = ({ navigation, userPhonenumber, userAvatar }) => {
                                 </TouchableHighlight>
 
                                 <TouchableHighlight onPress={takeImage}>
-                                <View style={styles.itemStyle}>
-                                    <Image source={require('../assets/icons/cam.png')} style={styles.bottomSheetIcon} />
-                                    <Text>Camera</Text>
-                                </View>
+                                    <View style={styles.itemStyle}>
+                                        <Image source={require('../assets/icons/cam.png')} style={styles.bottomSheetIcon} />
+                                        <Text>Camera</Text>
+                                    </View>
                                 </TouchableHighlight>
                             </View>
                         </View>
@@ -183,6 +218,10 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const screenWidth = Math.round(Dimensions.get('window').width);
 export default CreatePost
 const styles = StyleSheet.create({
+    imageList: {
+        marginTop: 40,
+        height: "70%"
+    },
     parentContainer: {
         height: screenHeight,
         position: 'relative',

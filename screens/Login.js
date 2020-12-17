@@ -15,14 +15,30 @@ import {
 } from "react-native-responsive-dimensions";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeTab from "../navigations/HomeTab";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
-const Login = ({ navigation, savedToken }) => {
+const Login = ({ navigation }) => {
     const [isPhonenumberHighlighted, setPhonenumberIsHighlighted] = useState(false)
     const [isPasswordHighlighted, setPasswordIsHighlighted] = useState(false)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
     const [hasUnsavedChanges, setUnsavedChanges] = useState(true);
+
+    const registerForPushNotificationsAsync = async () => {
+        const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if (status != 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          // finalStatus = status;
+        }
+        if (status !== 'granted') {
+          alert('Failed to get push token for push notification!');
+          return;
+        }
+        let token = (await Notifications.getExpoPushTokenAsync()).data;
+        return token
+    };
 
     useEffect(
         () =>
@@ -36,8 +52,10 @@ const Login = ({ navigation, savedToken }) => {
         [navigation]
       );
 
-    const signInUser = () => {
-        let url = `https://project-facebook-clone.herokuapp.com/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
+    const signInUser = async () => {
+        let savedToken = await registerForPushNotificationsAsync();
+        console.log(savedToken);
+        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -47,11 +65,12 @@ const Login = ({ navigation, savedToken }) => {
                 }
             })
             const json = await response.json();
+            console.log(json)
             setData(json);
             if (json.code !== '1000' ){
                 Alert.alert(
                     "Login fail",
-                    "Can't login at the moment, please try again",
+                    json.message,
                     [
                       { text: "OK", onPress: () => console.log("OK Pressed") }
                     ],
