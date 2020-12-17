@@ -25,7 +25,7 @@ const Friends = ({ navigation }) => {
 
 
     useEffect(() => {
-        const url = `http://192.168.31.17:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const url = `https://project-facebook-clone.herokuapp.com/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',

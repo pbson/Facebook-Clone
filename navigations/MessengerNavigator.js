@@ -57,7 +57,10 @@ const Navigator = () => {
                             },
                         }}
                 />
-
+                <Stack.Screen
+                    name='CreatePost'
+                    component={CreatePost}
+                />
                 <Stack.Screen
                     options={
                         ({ navigation }) => ({

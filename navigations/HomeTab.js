@@ -15,7 +15,10 @@ import Settings from '../screens/Settings';
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeTab = () => {
+const HomeTab = ({userId,userPhonenumber, userAvatar}) => {
+    useEffect(() => {
+        console.log(userId)
+    }, []);    
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -57,6 +60,9 @@ const HomeTab = () => {
                 name="Feed"
                 options={{ title: "Feed" }}
                 component= {Feed}
+                userId={userId}
+                userAvatar={userAvatar}
+                userPhonenumber={userPhonenumber}
             />
             <Tab.Screen
                 name="Friends"

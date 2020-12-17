@@ -7,51 +7,37 @@ import {
     TouchableHighlight,
     Alert,
     Text,
-    Platform
 } from "react-native";
 import {
     responsiveFontSize,
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import * as Device from 'expo-device';
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeTab from "../navigations/HomeTab";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, savedToken }) => {
     const [isPhonenumberHighlighted, setPhonenumberIsHighlighted] = useState(false)
     const [isPasswordHighlighted, setPasswordIsHighlighted] = useState(false)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
+    const [hasUnsavedChanges, setUnsavedChanges] = useState(true);
 
-    useEffect(() => {
-        if (data.code != 0){
-            Alert.alert('ohno')
-        }
-    }, []);
+    useEffect(
+        () =>
+          navigation.addListener('beforeRemove', (e) => {
+            if (!hasUnsavedChanges) {
+                return;
+            }else{
+                navigation.dispatch(e.data.action)
+            }
+          }),
+        [navigation]
+      );
 
     const signInUser = () => {
-        Alert.alert(
-            "Alert Title",
-            "My Alert Msg",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-          );
-
-        const deviceId = Constants.installationId;
-
-        let url = `http://localhost:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${deviceId}`
+        let url = `https://project-facebook-clone.herokuapp.com/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -64,7 +50,7 @@ const Login = ({ navigation }) => {
             setData(json);
             if (json.code !== '1000' ){
                 Alert.alert(
-                    "Alert Title",
+                    "Login fail",
                     "Can't login at the moment, please try again",
                     [
                       { text: "OK", onPress: () => console.log("OK Pressed") }
@@ -72,7 +58,13 @@ const Login = ({ navigation }) => {
                     { cancelable: false }
                 );
             }else{
-                navigation.navigate(HomeTab)
+                await AsyncStorage.setItem('savedToken', json.data.token)
+                setUnsavedChanges(false)
+                navigation.navigate(HomeTab,{
+                    userId: json.data.id,
+                    userPhonenumber: json.data.phoneNumber,
+                    userAvatar: json.data.avatar
+                })
             }
         }
         fetchResult()
@@ -101,6 +93,7 @@ const Login = ({ navigation }) => {
                     onFocus={() => { setPasswordIsHighlighted(true) }}
                     onBlur={() => { setPasswordIsHighlighted(false) }}
                     placeholder="Password"
+                    secureTextEntry={true}
                 />
                 <View style={styles.signinButtonContainer}>
                     <TouchableHighlight

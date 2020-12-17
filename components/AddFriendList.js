@@ -4,7 +4,9 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableNativeFeedback,
+    TouchableHighlight
 } from "react-native";
 
 const AddFriendList = ({ addFriendImg, addFriendName, addFriendMutual }) => {
@@ -37,14 +39,16 @@ const AddFriendList = ({ addFriendImg, addFriendName, addFriendMutual }) => {
                         <View style={styles.addFriendButton}>
                             <TouchableOpacity onPress={addButtonClick}
                                 style={styles.ButtonAddStyle}
-                                activeOpacity={0.5}>
+                                activeOpacity={1}
+                                delayPressIn={0}>
                                 <Text style={styles.TextStyle}>{addButton}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.addFriendButton}>
                             <TouchableOpacity
                                 style={styles.ButtonDeleteStyle}
-                                activeOpacity={0.5}>
+                                activeOpacity={0.2}
+                                delayPressIn={0}>
                                 <Text style={styles.TextStyleDelete}>
                                     Delete
                                     </Text>
