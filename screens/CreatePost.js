@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
     Keyboard, Animated, Text, StyleSheet, View, SafeAreaView, TouchableOpacity, TextInput,
-    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal,Alert
+    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal, Alert
 } from 'react-native'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import * as ImagePicker from 'expo-image-picker';
@@ -9,11 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import MasonryList from "react-native-masonry-list";
-
+import mime from "mime";
 
 const CreatePost = ({ navigation }) => {
     const [text, setText] = useState('');
     const [images, setImage] = useState([]);
+    const [uploadedImages, setUploadedImages] = useState([]);
+    const [imagesCount, setImagesCount] = useState(0);
 
     const pickImage = async () => {
         let permission = await ImagePicker.requestCameraRollPermissionsAsync()
@@ -28,9 +30,17 @@ const CreatePost = ({ navigation }) => {
         });
 
         if (!result.cancelled) {
-            setImage([...images,{uri: result.uri, type: result.type}]);
+            if (result.type == 'video') {
+                setImagesCount(4)
+            } else {
+                const newImageUri = "file:///" + result.uri.split("file:/").join("");
+
+                setImage([...images, { uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() }]);
+                setImagesCount(imagesCount + 1)
+            }
         }
     };
+
     const takeImage = async () => {
         let permission = await ImagePicker.requestCameraPermissionsAsync()
         if (permission.granted == false) {
@@ -44,39 +54,61 @@ const CreatePost = ({ navigation }) => {
             videoMaxDuration: 5
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
-            setImage([...images,{uri: result.uri, type: result.type}]);
+            if (result.type == 'video') {
+                setImagesCount(4)
+            } else {
+                const newImageUri = "file:///" + result.uri.split("file:/").join("");
+
+                setImage([...images, { uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() }]);
+                setImagesCount(imagesCount + 1)
+            }
         }
     };
     /////////////////////////////////////////////////
     const sendPost = async () => {
+        let arr = []
+        if (images && images.length > 0) {
+            for(image of images) {
+                let formData = new FormData();
+                formData.append('file', image);
+                formData.append('upload_preset', 'pbson639')
+                formData.append('cloud_name', 'pbson639')
+                const response = await fetch("https://api.cloudinary.com/v1_1/pbson639/image/upload", {
+                    method: "post",
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    body: formData
+                })
+                const data = await response.json();
+                arr.push(data.secure_url)
+            };
+        }     
+
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/post/add_post?token=${savedToken}&described=${text}&status=happy`
-        console.log(JSON.stringify(images));
+        const url = `http://192.168.31.17:3000/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
         const response = await fetch(url, {
             method: 'POST',
-            body: JSON.stringify(images),
+            body: JSON.stringify(arr),
             headers: {
-                Accept: 'application/json',
-                'content-type': 'application/json',
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
             }
         })
         const json = await response.json();
         if (json.code === '1000') {
-            console.log(json)
             navigation.goBack()
         } else {
             Alert.alert(
                 "Add post fail",
                 json.message,
                 [
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                    { text: "OK" }
                 ],
                 { cancelable: false }
             );
         }
+
     }
     ////////////////////////////////////////////////
     const [modalVisible, setState] = useState(true)
@@ -98,10 +130,13 @@ const CreatePost = ({ navigation }) => {
                 y: pan.y._value
             });
         },
-        onPanResponderMove: Animated.event([
-            null,
-            { dx: pan.x, dy: pan.y }
-        ]),
+        onPanResponderMove: Animated.event(
+            [
+                null,
+                { dx: pan.x, dy: pan.y }
+            ],
+            { useNativeDriver: false }
+        ),
 
         onPanResponderRelease: (event, gestureState) => {
             if (gestureState.dy < 20) { pan.y.setValue(0.0) }
@@ -146,30 +181,30 @@ const CreatePost = ({ navigation }) => {
                 </View>
 
                 <View style={{ ...styles.editorWrapper }}>
-
                     <TextInput
                         onFocus={() => pan.y.setValue(screenHeight)}
                         placeholderTextColor={"black"}
                         placeholder="What's on your mind?"
                         placeholderTextColor="#808080"
-                        onChangeText={() => setText(text)}
-                        multiline numberOfLines={1} style={{
+                        onChangeText={text => setText(text)}
+                        multiline numberOfLines={1}
+                        style={{
                             ...styles.editor, fontSize: 20,
                             textAlign: 'left', fontWeight: 'normal',
-
                         }}>
                     </TextInput>
+
                     <View style={styles.imageList}>
-                    <MasonryList
-                        images={images}
-                    />
+                        <MasonryList
+                            images={images}
+                        />
                     </View>
                     <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={140} style={{ position: 'absolute', top: screenHeight / 1.44 }}>
                         <View style={styles.bottomTab}>
-                            <TouchableHighlight onPress={takeImage} >
+                            <TouchableHighlight disabled={imagesCount >= 4} onPress={takeImage} >
                                 <Image style={styles.bottomSheetIcon} source={require('../assets/icons/cam.png')} />
                             </TouchableHighlight>
-                            <TouchableHighlight onPress={pickImage} >
+                            <TouchableHighlight disabled={imagesCount >= 4} onPress={pickImage} >
                                 <Image style={styles.bottomSheetIcon} source={require('../assets/icons/pic.png')} />
                             </TouchableHighlight>
                             <TouchableHighlight onPress={dismis} >
@@ -220,7 +255,7 @@ export default CreatePost
 const styles = StyleSheet.create({
     imageList: {
         marginTop: 40,
-        height: "70%"
+        flex: 1
     },
     parentContainer: {
         height: screenHeight,
@@ -293,10 +328,8 @@ const styles = StyleSheet.create({
         top: 0,
         marginLeft: "5%",
         justifyContent: 'center',
-        height: "auto",
-        width: '100%',
-
-
+        width: '90%',
+        flex: 1
     },
     toolOptionsWrapper: {
         position: 'absolute',

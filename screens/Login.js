@@ -46,16 +46,17 @@ const Login = ({ navigation }) => {
             if (!hasUnsavedChanges) {
                 return;
             }else{
+                e.preventDefault();
                 navigation.dispatch(e.data.action)
             }
           }),
-        [navigation]
+        [navigation, hasUnsavedChanges]
       );
 
     const signInUser = async () => {
         let savedToken = await registerForPushNotificationsAsync();
         console.log(savedToken);
-        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
+        let url = `http://192.168.31.17:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -86,7 +87,18 @@ const Login = ({ navigation }) => {
                 })
             }
         }
-        fetchResult()
+        try {
+            fetchResult()
+        } catch (error) {
+            Alert.alert(
+                "Login fail",
+                "Network is fuck up",
+                [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        }
     }
 
     return (

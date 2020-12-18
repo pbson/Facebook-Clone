@@ -92,7 +92,7 @@ const BottomDivider = styled.View`
 	height: 9px;
 	background: #f0f2f5;
 `
-const FeedPost = () => {
+const FeedPost = ({author, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video}) => {
 	return (
 		<>
 			<Container>

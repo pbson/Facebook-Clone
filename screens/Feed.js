@@ -34,7 +34,7 @@ const Feed = ({ navigation}) => {
             if (savedToken === null) {
                 navigation.navigate('Login')
             }
-            const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+            const url = `http://192.168.31.17:3000/it4788/user/get_user_info?token=${savedToken}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -45,13 +45,14 @@ const Feed = ({ navigation}) => {
             const json = await response.json();
             if(json.code !== '1000'){
                 navigation.navigate('Login')
+            }else {
+                setUser(json.data);
             }
-            setUser(json.data);
         }
 
         const fetchResult = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${savedToken}&index=${index}&count=${count}`
+            const url = `http://192.168.31.17:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -60,13 +61,13 @@ const Feed = ({ navigation}) => {
                 }
             })
             const json = await response.json();
+            console.log(json)
             setData(json.data);
         }
-        fetchResult()
         getUserInfo()
+        fetchResult()
     }, []);
     return (
-
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
@@ -81,11 +82,28 @@ const Feed = ({ navigation}) => {
                 </View>
             </View>
             <View style={styles.break}></View>
-            <FlatList
+            <FlatList 
                 style={styles.chatContainer}
+                data={data}
+                keyExtractor={({ id }, index) => id}
+                renderItem={({ item }) => (
+                    <FeedPost
+                        author = {item.author}
+                        id = {item.id}
+                        described = {item.described}
+                        status = {item.status}
+                        created = {item.created}
+                        modified = {item.modified}
+                        like = {item.like}
+                        comment = {item.comment}
+                        image = {item.image}
+                        is_liked = {item.is_liked}
+                        can_edit = {item.can_edit}
+                        can_comment = {item.can_comment}
+                        video = {item.video}
+                    />
+                )}
             />
-            <FeedPost />
-            <FeedPost />
         </ScrollView>
     );
 };

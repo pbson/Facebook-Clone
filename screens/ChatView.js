@@ -15,11 +15,11 @@ const ChatView = ({ route }) => {
     const index = 0
     const count = 40
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
-    const [socket] = io('http://192.168.0.140:3000', {jsonp:false, transports: ['websocket'], });
+    const [socket] = io('http://192.168.31.17:3000', {jsonp:false, transports: ['websocket'], });
 
     useEffect(() => {
         //get message
-        let url = `http://192.168.0.140:3000/it4788/chatsocket/get_conversation?token=${token}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
+        let url = `http://192.168.31.17:3000/it4788/chatsocket/get_conversation?token=${token}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
