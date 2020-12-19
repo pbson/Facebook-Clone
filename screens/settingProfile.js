@@ -3,6 +3,6 @@ import { StyleSheet, Text } from 'react-native';
 
 export default function settingProfile() {
     return (
-      
+      <Text>t</Text>
     );
   }

@@ -29,6 +29,7 @@ import Camera from '../assets/cam2.png';
 
 import settingProfile from '../navigations/ProfileNavigator';
 import { Navigation } from 'react-native-navigation';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
 export default function Profile(props)  {
   return( 
@@ -48,9 +49,11 @@ export default function Profile(props)  {
       alignItems: 'center',
     }}>
      <Image source = {CoverPhoto} style = {styles.coverPhoto}/>
-     <View style = {styles.cam} >
-      <Image source = {Camera} style = {styles.cameraIcon}/>
-     </View>
+     <TouchableNativeFeedback style = {styles.camCover}>
+      <View style = {styles.cam} >
+        <Image source = {Camera} style = {styles.cameraIcon}/>
+      </View>
+     </TouchableNativeFeedback>
      {/* <Image source = {Camera} style = {styles.cameraIcon}/> */}
     </View>
 
@@ -58,9 +61,18 @@ export default function Profile(props)  {
     <View style = {styles.dpContainner}>
       <View style = {styles.dpBlueRound}>
         <Image style = {styles.dp} source = {CoverPhoto} />
-        <View style = {styles.activeNowTick}>
-          <Image source = {Camera} style = {styles.cameraIcon}/>
-        </View>
+        <TouchableNativeFeedback style = {{
+                height: 35,
+                width: 35,
+                borderRadius: 30,
+                position: 'absolute',
+                right: 0,
+                bottom: 2,
+        }}>
+          <View style = {styles.activeNowTick}>
+            <Image source = {Camera} style = {styles.cameraIcon}/>
+          </View>
+        </TouchableNativeFeedback>
       </View>
     </View>
 
@@ -351,7 +363,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'lightgray',
       position: 'absolute',
       right: 0,
-      bottom: 2,
+      bottom: 0,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -612,6 +624,12 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    camCover: {
+      width: 35,
+      height: 35,
+      borderRadius: 30,
+      left: 170,
     }
   
   });
