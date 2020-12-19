@@ -55,8 +55,7 @@ const Login = ({ navigation }) => {
 
     const signInUser = async () => {
         let savedToken = await registerForPushNotificationsAsync();
-        console.log(savedToken);
-        let url = `http://192.168.31.17:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
+        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -66,7 +65,6 @@ const Login = ({ navigation }) => {
                 }
             })
             const json = await response.json();
-            console.log(json)
             setData(json);
             if (json.code !== '1000' ){
                 Alert.alert(

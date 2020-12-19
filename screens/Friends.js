@@ -5,61 +5,131 @@ import {
     StyleSheet,
     Text,
     FlatList,
-    Button,
-    TouchableOpacity,
-    Image
+    RefreshControl
 } from "react-native";
 import {
     responsiveFontSize,
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import AddFriendList from '../components/AddFriendList'
+import AddFriendList from '../components/AddFriendList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
 const Friends = ({ navigation }) => {
-    const [data, setData] = useState([]);
+    const [suggestedFriends, setSuggestedFriends] = useState([]);
+    const [request, setRequest] = useState([]);
 
     const index = 0
-    const count = 20
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
+    const count = 30
+    const fetchSuggestedFriends = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_list_suggested_friends?token=${savedToken}&index=${index}&count=${count}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setSuggestedFriends(json.data);
+    }
 
+    const fetchResquestedFriends = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_requested_friends?token=${savedToken}&index=${index}&count=${count}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setRequest(json.data.request);
+    }
+    useFocusEffect(React.useCallback(() => {
+        fetchResquestedFriends()
+        fetchSuggestedFriends()
+    }, []))
+    ///////////////////////////////// Pull down to refresh
+    const [refreshing, setRefreshing] = React.useState(false);
 
-    useEffect(() => {
-        const url = `http://192.168.31.17:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
-        const fetchResult = async () => {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            setData(json.data);
-        }
-        fetchResult()
-    }, []);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        fetchResquestedFriends()
+        fetchSuggestedFriends()
+    });
     return (
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
         >
             <View style={styles.headerContainer}>
                 <Text style={styles.headingText}>Friends</Text>
             </View>
 
             <View style={styles.addfriendContainer}>
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.addfriendWrapper}>
+                        <Text style={styles.title}>
+                            Friend request {"  "}
+                            <Text style={styles.requestFriendsLength}>
+                                {request.length}
+                            </Text>
+                        </Text>
+
+                        <View key={index}>
+                            <FlatList
+                                style={styles.chatContainer}
+                                data={request}
+                                extraData={request}
+                                keyExtractor={({ id }, index) => id}
+                                renderItem={({ item }) => (
+                                    <AddFriendList
+                                        isRequest={true}
+                                        id={item.id}
+                                        addFriendImg={item.avatar}
+                                        addFriendName={item.username}
+                                    />
+                                )}
+                            />
+
+                        </View>
+                    </View>
+
                     <View style={styles.addfriendWrapper}>
                         <Text style={styles.title}>
                             People you may know
                         </Text>
                         <View key={index}>
-                            <AddFriendList
-                                addFriendImg={require("../src/img/photostatus.jpg")}
-                                addFriendName="Ngoc Dao"
-                                addFriendMutual={4}
+                            <FlatList
+                                style={styles.chatContainer}
+                                data={suggestedFriends}
+                                extraData={suggestedFriends}
+                                keyExtractor={({ id }, index) => id}
+                                renderItem={({ item }) => (
+                                    <AddFriendList
+                                        isRequest={false}
+                                        id={item.id}
+                                        addFriendImg={`http://${item.avatar}`}
+                                        addFriendName={item.username}
+                                    />
+                                )}
                             />
+
                         </View>
                     </View>
                 </ScrollView>
@@ -74,6 +144,11 @@ const Friends = ({ navigation }) => {
 export default Friends;
 
 const styles = StyleSheet.create({
+    requestFriendsLength: {
+        marginLeft: 10,
+        color: 'red'
+    },
+
     headerContainer: {
         padding: 10,
         width: responsiveWidth(95),

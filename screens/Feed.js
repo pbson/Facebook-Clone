@@ -34,7 +34,7 @@ const Feed = ({ navigation}) => {
             if (savedToken === null) {
                 navigation.navigate('Login')
             }
-            const url = `http://192.168.31.17:3000/it4788/user/get_user_info?token=${savedToken}`
+            const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -47,12 +47,13 @@ const Feed = ({ navigation}) => {
                 navigation.navigate('Login')
             }else {
                 setUser(json.data);
+                console.log(json.data)
             }
         }
 
         const fetchResult = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.31.17:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
+            const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -61,7 +62,6 @@ const Feed = ({ navigation}) => {
                 }
             })
             const json = await response.json();
-            console.log(json)
             setData(json.data);
         }
         getUserInfo()

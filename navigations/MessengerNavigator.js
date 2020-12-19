@@ -93,38 +93,23 @@ const Navigator = () => {
                     options={
                         ({ navigation, route }) => ({
                             title: null,
-                            headerRight: () => {
-                                return (
-                                    <View style={styles.chatViewHeaderRightContainer}>
-                                        <TouchableOpacity style={styles.call}>
-                                            <Ionicons name="ios-call" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.video}>
-                                            <FontAwesome name="video-camera" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.info}>
-                                            <FontAwesome5 name="info-circle" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity>
-                                    </View>
-                                )
-                            },
-                            headerLeft: () => {
-                                return (
-                                    <View style={styles.chatViewHeaderLeftContainer}>
-                                        <TouchableOpacity onPress={() => { navigation.goBack() }}>
-                                            <Ionicons name="md-arrow-back" size={responsiveFontSize(3)} color="#006AFF" />
-                                        </TouchableOpacity>
-                                        <View style={styles.chatViewProPicContainer}>
-                                            <Image style={styles.profilePic} source={{ uri: route.params.proPicUrl }} />
-                                        </View>
-                                        <View>
-                                            <Text style={styles.name}>{route.params.phonenumber}</Text>
-                                            <Text style={styles.lastOnlineText}>Active 12 hour ago</Text>
-                                        </View>
+                            // headerLeft: () => {
+                            //     return (
+                            //         <View style={styles.chatViewHeaderLeftContainer}>
+                            //             <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                            //                 <Ionicons name="md-arrow-back" size={responsiveFontSize(3)} color="#006AFF" />
+                            //             </TouchableOpacity>
+                            //             <View style={styles.chatViewProPicContainer}>
+                            //                 <Image style={styles.profilePic} source={{ uri: route.params.proPicUrl }} />
+                            //             </View>
+                            //             <View>
+                            //                 <Text style={styles.name}>{route.params.phonenumber}</Text>
+                            //                 <Text style={styles.lastOnlineText}>Active 12 hour ago</Text>
+                            //             </View>
 
-                                    </View>
-                                )
-                            },
+                            //         </View>
+                            //     )
+                            // },
                             headerLeftContainerStyle: {
                                 paddingHorizontal: 10
                             }

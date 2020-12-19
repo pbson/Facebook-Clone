@@ -12,16 +12,32 @@ import {
     responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat = ({ conversationId, partnerId, phonenumber, time, message, hasSeen, proPicUrl, seenProPicUrl, navigation }) => {
+const Chat = ({ userId, username, conversationId, partnerId, time, message, hasSeen, proPicUrl, seenProPicUrl, navigation }) => {
     let currentDate = new Date()
     const openChatView = () => {
-        navigation.navigate('ChatView', {
-            conversationId: conversationId,
-            partnerId: partnerId,
-            phonenumber: phonenumber,
-            proPicUrl: proPicUrl,
-        })
+        const fetchResult = async () => {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            let url = `http://192.168.0.140:3000/it4788/chatsocket/set_conversation?token=${savedToken}&partnerid=${partnerId}`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            console.log(json)
+            navigation.navigate('ChatView', {
+                conversationId: json.data,
+                userId: userId,
+                partnerId: partnerId,
+                username: username,
+                proPicUrl: proPicUrl,
+            })
+        }
+        fetchResult()
     }
     const formatTime = new Date(time)
 
@@ -41,7 +57,7 @@ const Chat = ({ conversationId, partnerId, phonenumber, time, message, hasSeen, 
             </View>
             <View style={styles.descriptionContainer}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.name}>{phonenumber}</Text>
+                    <Text style={styles.name}>{username}</Text>
                 </View>
                 <View style={styles.detailsContainer}>
                     <Text style={styles.message}> You : {message} </Text>

@@ -1,62 +1,140 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     StyleSheet,
     View,
     Text,
     Image,
     TouchableOpacity,
-    TouchableNativeFeedback,
-    TouchableHighlight
+    Alert
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AddFriendList = ({ addFriendImg, addFriendName, addFriendMutual }) => {
+const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isRequest }) => {
 
-    const [addButton, setState] = useState('Confrim');
+    const [addButton, setState] = useState('');
+    const [friendState, setFriend] = useState('');
+    const [showButton, setButton] = useState(true);
+    const [showContainer, setContainer] = useState(true);
 
-    const addButtonClick = () => {
-        setState('Added')
+    useEffect(() => {
+        if (isRequest === true) {
+            setState('Confirm')
+        } else {
+            setState('Add friend')
+        }
+    }, []);
+    const addButtonClick = async () => {
+        if (isRequest === true) {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            const url = `http://192.168.0.140:3000/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=1`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            if (json.code !== '1000') {
+                Alert.alert(
+                    "Send request fail",
+                    json.message,
+                    [
+                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                    ],
+                    { cancelable: false }
+                );
+            } else {
+                setFriend('You have become friend')
+                setButton(false)
+            }
+        } else {
+            setState('Request sent')
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            const url = `http://192.168.0.140:3000/it4788/user/set_request_friend?token=${savedToken}&user_id=${id}`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+        }
     }
 
+    const deleteButtonClick = async () => {
+        if (isRequest === true) {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            const url = `http://192.168.0.140:3000/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=0`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            if (json.code !== '1000') {
+                Alert.alert(
+                    "Send request fail",
+                    json.message,
+                    [
+                        { text: "OK", onPress: () => console.log(addFriendImg) }
+                    ],
+                    { cancelable: false }
+                );
+            } else {
+                setFriend('Request for friends removed')
+                setButton(false)
+            }
+        } else {
+            setContainer(false)
+        }
+    }
     return (
         <View style={styles.container}>
-            <View style={styles.friendlistContainer}>
-                <View>
+            {showContainer ?
+                <View style={styles.friendlistContainer}>
                     <View>
-                        <Image
-                            style={styles.friendImg}
-                            source={addFriendImg}
-                        />
+                        <View>
+                            <Image
+                                style={styles.friendImg}
+                                source={{uri: addFriendImg}}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.addFriendList}>
-                    <Text style={styles.addFriendName}>
-                        {addFriendName}
-                    </Text>
-                    <Text style={styles.addFriendMutual}>
-                        {addFriendMutual} mutual friends
+                    <View style={styles.addFriendList}>
+                        <Text style={styles.addFriendName}>
+                            {addFriendName}
                         </Text>
-                    <View style={styles.addFriendButtonContainer}>
-                        <View style={styles.addFriendButton}>
-                            <TouchableOpacity onPress={addButtonClick}
-                                style={styles.ButtonAddStyle}
-                                activeOpacity={1}
-                                delayPressIn={0}>
-                                <Text style={styles.TextStyle}>{addButton}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.addFriendButton}>
-                            <TouchableOpacity
-                                style={styles.ButtonDeleteStyle}
-                                activeOpacity={0.2}
-                                delayPressIn={0}>
-                                <Text style={styles.TextStyleDelete}>
-                                    Delete
+                        <Text style={styles.friendState}>
+                            {friendState}
+                        </Text>
+                        {showButton ? <View style={styles.addFriendButtonContainer}>
+                            <View style={styles.addFriendButton}>
+                                <TouchableOpacity
+                                    onPress={addButtonClick}
+                                    style={styles.ButtonAddStyle}
+                                    activeOpacity={1}
+                                    delayPressIn={0}>
+                                    <Text style={styles.TextStyle}>{addButton}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.addFriendButton}>
+                                <TouchableOpacity
+                                    onPress={deleteButtonClick}
+                                    style={styles.ButtonDeleteStyle}
+                                    activeOpacity={0.2}
+                                    delayPressIn={0}>
+                                    <Text style={styles.TextStyleDelete}>
+                                        Delete
                                     </Text>
-                            </TouchableOpacity>
-                        </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View> : null}
                     </View>
-                </View>
-            </View>
+                </View> : null}
         </View>
     );
 }
@@ -82,6 +160,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: "#1C1E21"
+    },
+    friendState: {
+        color: 'grey',
+        fontSize: 16,
     },
     addFriendMutual: {
         fontSize: 16,

@@ -1,26 +1,37 @@
+import _ from 'lodash';
 import { AntDesign, Entypo, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, TextInput, Text } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableOpacity, TextInput, Text, YellowBox } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions';
 import ReceivedMessage from '../components/ReceivedMessage';
 import SendMessage from '../components/SendMessage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import io from 'use-socket.io-client';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 const ChatView = ({ route }) => {
     const [data, setData] = useState([]);
     const partnerId = route.params.partnerId
+    const userId = route.params.userId
     const conversationId = route.params.conversationId
     const index = 0
-    const count = 40
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
-    const [socket] = io('http://192.168.31.17:3000', {jsonp:false, transports: ['websocket'], });
+    const count = 1000
+    const [socket] = io('http://192.168.0.140:3000', { transports: ['websocket'], });
+    let newMessage
 
     useEffect(() => {
-        //get message
-        let url = `http://192.168.31.17:3000/it4788/chatsocket/get_conversation?token=${token}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
         const fetchResult = async () => {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            let url = `http://192.168.0.140:3000/it4788/chatsocket/get_conversation?token=${savedToken}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -31,34 +42,44 @@ const ChatView = ({ route }) => {
             const json = await response.json();
             setData(json.data);
         }
-        fetchResult()
+        const socketFunction = () => {
+            socket.connect();
 
-        //socketio connection
-        socket.connect();
+            let info = {
+                userid: userId,
+                partnerid: partnerId,
+                conversationId: conversationId
+            }
 
-        let info = {
-            userid: '5f7778b49760fe00763a8c7f',
-            partnerid: partnerId
+            socket.emit('joinChat2', info)
+            socket.on('onmessage', async message => {
+                fetchResult();
+                let savedToken = await AsyncStorage.getItem('savedToken');
+                let newMessage = {
+                    conversationId: message.IdConversation,
+                    partnerId: message.Sender,
+                    token: savedToken,
+                    Content: message.Content,
+                    isUnread: message.Unread,
+                }
+                console.log(data);
+            });
         }
-
-        socket.emit('joinChat',info)
-        socket.on('onmessage', message => {
-            console.log(message)
-            setData([...data, message])
-        });
+        fetchResult()
+        socketFunction()
 
     }, []);
 
-    const changeData= (event) => {
-        let newMessage = {
+    const changeData = async (event) => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        newMessage = {
+            conversationId: conversationId,
             partnerId: partnerId,
-            token: token,
+            token: savedToken,
             Content: event.nativeEvent.text,
             isUnread: false,
         }
-
-        socket.emit('send', newMessage);
-        setData([...data, newMessage])
+        socket.emit('send2', newMessage);
     }
 
     const renderItem = ({ item }) => {
@@ -81,33 +102,15 @@ const ChatView = ({ route }) => {
         <View style={styles.container}>
             <ScrollView style={styles.chatContainer} contentContainerStyle={{ flexGrow: 1 }} style={styles.chatView}>
                 <FlatList
-                    style={styles.chatContainer} 
+                    style={styles.chatContainer}
                     data={data}
-                    keyExtractor={({ id }, index) => id}
                     renderItem={renderItem}
                     extraData={data}
                 />
             </ScrollView>
             <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.icon}>
-                    <Entypo name="grid" size={responsiveFontSize(3.5)} color="#006AFF" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.icon}>
-                    <FontAwesome5 name="camera" size={responsiveFontSize(3.5)} color="#006AFF" />
-
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.icon}>
-                    <AntDesign name="picture" size={responsiveFontSize(3.5)} color="#006AFF" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.icon}>
-                    <FontAwesome name="microphone" size={responsiveFontSize(3.5)} color="#006AFF" />
-                </TouchableOpacity>
                 <View style={styles.sendMsgContainer}>
-                    <TextInput placeholder="Aa" style={styles.input} onSubmitEditing={event => changeData(event)} />
-
+                    <TextInput placeholder="Aa" style={styles.input} onSubmitEditing={(event) => { event.persist(); changeData(event) }} />
                 </View>
 
                 <TouchableOpacity style={styles.icon}>
@@ -143,7 +146,8 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(1.8)
     },
     sendMsgContainer: {
-        width: '40%',
+        marginLeft: 30,
+        width: '80%',
         backgroundColor: 'rgba(211,211,211,0.5)',
         borderRadius: 20,
         flexDirection: 'row',
