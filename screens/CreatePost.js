@@ -59,7 +59,7 @@ class CreatePost extends Component {
             }}>
                 
         
-                    <SafeAreaView style={styles.container}>
+                    <SafeAreaView style={styles.container} >
                         <View style={styles.navigationBar}>
                                 <TouchableOpacity onPress={()=>this.toggleModal()} style={styles.naviIcon}>
                                     <FontAwesome5Icon color="#000" name="times" size={20}></FontAwesome5Icon>

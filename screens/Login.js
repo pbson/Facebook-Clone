@@ -28,11 +28,11 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        if (data.code != 0){
-            Alert.alert('ohno')
-        }
-    }, []);
+//    useEffect(() => {
+ //       if (data.code != 0){
+ //           Alert.alert('ohno')
+ //       }
+ //   }, []);
 
     const signInUser = () => {
         Alert.alert(
