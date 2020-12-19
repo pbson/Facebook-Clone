@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     },
     addstory: {
       height: 43,
-      width: 300,
+      width: '80%',
       backgroundColor: 'blue',
       marginRight: 5,
       borderRadius: 10,
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     },
     addOption: {
       height: 43,
-      width: 50,
+      width: '15%',
       backgroundColor: 'lightgray',
       marginRight: 10,
       borderRadius: 10,
