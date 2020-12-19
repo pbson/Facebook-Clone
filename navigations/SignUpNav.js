@@ -8,6 +8,7 @@ import CreateAccount from '../screens/Login_screens/CreateAccount.js'
 import Email from '../screens/Login_screens/Email.js'
 import UserBirth from '../screens/Login_screens/UserBirth.js'
 import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
+import CreatePassword from '../screens/Login_screens/CreatePassword.js'
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const SignUpNav = () => {
         <Stack.Screen name="UserGender" component={UserGender} />
         <Stack.Screen name="UserPhoneNumber" component={UserPhoneNumber} />
         <Stack.Screen name="Email" component={Email} />
+        <Stack.Screen name="CreatePassword" component={CreatePassword} />
       </Stack.Navigator>
     </NavigationContainer>
     )

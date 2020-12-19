@@ -16,45 +16,34 @@ import { set } from 'react-native-reanimated'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
 
 
-const UserPhoneNumber = ({route,navigation})=>{
-const [phone, setPhone]=useState('')
-const [isNextEmail, setIsNextEmail]= useState(false)
-
+const CreatePassword = ({route,navigation})=>{
+const [pass, setPass]=useState('')
+const [isDone, setIsDone]= useState(false)
+const set=(value)=>{
+    setPass(value)
+    console.log(value)
+    setIsDone(true)
+}
 useEffect(()=>{
-    if(phone=='') setIsNextEmail(false)
-    else setIsNextEmail(true)
+    if(pass=='') setIsDone(false)
+    else setIsDone(true)
 })
     return(
         <View style={styles.container} >
         <TouchableOpacity  style={styles.container} onPress={Keyboard.dismiss}>
                 
-                <Text  style={{color: '#1E90FF',fontSize: 20, padding: 20,fontWeight: 'bold'}}>What's your Mobile Number?</Text>
+                <Text  style={{color: '#1E90FF',fontSize: 20, padding: 20,fontWeight: 'bold'}}>Create a Password</Text>
                 <View style={styles.phoneInput}>
-                    <TextInput placeholder={'Enter your mobile phone number'} placeholderTextColor={'#808080'} onChangeText={(text)=>{setPhone(text)}} />
+                    <TextInput placeholder={'Enter your password'} placeholderTextColor={'#808080'} onChangeText={(text)=>{setPass(text)}} />
                 </View>
                 <View style={{width: '90%',paddingTop: '4%',paddingBottom: '4%'}}>
-                    <Text style={{textAlign: 'center',color: '#808080'}}>You'll use this phone number when you log in and if you ever need to reset your passwrod.</Text>
-                </View>
-                <View style={{  width: '90%',
-                                height: '7%',
-                                borderColor: '#808080',
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                justifyContent: 'center',
-                                paddingLeft: '3%',
-                                backgroundColor: 'white'}} >
-                    <Button title={'Use your email address'} color={'#808080'} onPress={()=>{navigation.navigate('Email')}}/>
+                    <Text style={{textAlign: 'center',color: '#808080'}}>Enter a combination of at least six numbers, letters and punctuation marks.</Text>
                 </View>
                 
+                
         </TouchableOpacity>
-        {isNextEmail&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('CreatePassword',{
-                first_name: route.params.first_name,
-                last_name: route.params.last_name,
-                date: route.params.date,
-                gender:route.params.gender,
-                phone: phone
-            })}}  />   
+        {isDone&&<View style={styles.nextBtn}>
+            <Button title={'Next'} color={'white'} onPress={()=>{console.log(route.params,pass)}}  />   
             </View>}
         <View 
                 onPress={()=>navigation.navigate('Login')}
@@ -68,7 +57,7 @@ useEffect(()=>{
         </View>
     )
 }
-export default UserPhoneNumber
+export default CreatePassword
 const styles = StyleSheet.create({
     container: {
         flex: 1,
