@@ -9,13 +9,15 @@ import Email from '../screens/Login_screens/Email.js'
 import UserBirth from '../screens/Login_screens/UserBirth.js'
 import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
 import CreatePassword from '../screens/Login_screens/CreatePassword.js'
+import Login from '../screens/Login.js'
 
 const Stack = createStackNavigator();
 
 const SignUpNav = () => {
     return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="CreateAccount">
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name = "Login" component={Login} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="AccountName" component={AccountName} />
         <Stack.Screen name="UserBirth" component={UserBirth} />
