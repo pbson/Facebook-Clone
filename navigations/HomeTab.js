@@ -15,7 +15,7 @@ import Settings from '../screens/Settings';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Home = () => {
+const HomeTab = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -87,7 +87,7 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default HomeTab;
 
 const styles = StyleSheet.create({
 
