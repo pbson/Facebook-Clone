@@ -6,7 +6,7 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import settingProfile from '../Facebook-Clone/screens/settingProfile.js';
-import Profile2 from '../Facebook-Clone/screens/Profile2.js';
+import Profile2 from '../Facebook-Clone/screens/Comment.js';
 
 export default function App() {
   return (
