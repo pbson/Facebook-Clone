@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import {
     Keyboard, Animated, Text, StyleSheet, View, SafeAreaView, TouchableOpacity, TextInput,
-    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal, Alert
+    Image, Dimensions, KeyboardAvoidingView, StatusBar, PanResponder, TouchableHighlight, Modal, Alert,
+    ActivityIndicator
 } from 'react-native'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import * as ImagePicker from 'expo-image-picker';
@@ -10,12 +11,29 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import MasonryList from "react-native-masonry-list";
 import mime from "mime";
+import * as Network from 'expo-network';
+import HomeTab from '../navigations/HomeTab';
 
 const CreatePost = ({ navigation }) => {
     const [text, setText] = useState('');
     const [images, setImage] = useState([]);
     const [uploadedImages, setUploadedImages] = useState([]);
     const [imagesCount, setImagesCount] = useState(0);
+    const [isUploading, setUploading] = useState(false);
+
+    const CheckConnectivity = async () => {
+        const netInfo = await Network.getNetworkStateAsync();
+        if (netInfo.isConnected == false) {
+            Alert.alert(
+                "Network error",
+                "Network disconnected please try again",
+                [
+                    { text: "OK", onPress: () => navigation.navigate(HomeTab) }
+                ],
+                { cancelable: false }
+            );
+        }
+    };
 
     const pickImage = async () => {
         let permission = await ImagePicker.requestCameraRollPermissionsAsync()
@@ -67,9 +85,11 @@ const CreatePost = ({ navigation }) => {
     };
     /////////////////////////////////////////////////
     const sendPost = async () => {
+        setUploading(true)
+        CheckConnectivity();
         let arr = []
         if (images && images.length > 0) {
-            for(image of images) {
+            for (let image of images) {
                 let formData = new FormData();
                 formData.append('file', image);
                 formData.append('upload_preset', 'pbson639')
@@ -83,10 +103,10 @@ const CreatePost = ({ navigation }) => {
                 const data = await response.json();
                 arr.push(data.secure_url)
             };
-        }     
+        }
 
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.31.17:3000/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
+        const url = `http://192.168.0.140:3000/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(arr),
@@ -97,8 +117,10 @@ const CreatePost = ({ navigation }) => {
         })
         const json = await response.json();
         if (json.code === '1000') {
+            setUploading(false)
             navigation.goBack()
         } else {
+            setUploading(false)
             Alert.alert(
                 "Add post fail",
                 json.message,
@@ -179,6 +201,16 @@ const CreatePost = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
+                {isUploading ?
+                        <View style={{
+                            marginBottom: 20,
+                        }}>
+                            <ActivityIndicator
+                                size="large"
+                                color="blue"
+                            />
+                        </View>
+                        : null}
 
                 <View style={{ ...styles.editorWrapper }}>
                     <TextInput
@@ -187,18 +219,18 @@ const CreatePost = ({ navigation }) => {
                         placeholder="What's on your mind?"
                         placeholderTextColor="#808080"
                         onChangeText={text => setText(text)}
-                        multiline numberOfLines={1}
+                        multiline numberOfLines={6}
                         style={{
                             ...styles.editor, fontSize: 20,
-                            textAlign: 'left', fontWeight: 'normal',
+                            textAlign: 'left', fontWeight: 'normal'
                         }}>
                     </TextInput>
-
                     <View style={styles.imageList}>
                         <MasonryList
                             images={images}
                         />
                     </View>
+
                     <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={140} style={{ position: 'absolute', top: screenHeight / 1.44 }}>
                         <View style={styles.bottomTab}>
                             <TouchableHighlight disabled={imagesCount >= 4} onPress={takeImage} >
@@ -241,10 +273,9 @@ const CreatePost = ({ navigation }) => {
                             </View>
                         </View>
                     </Animated.View>
-
                 </View>
             </SafeAreaView>
-        </Modal>
+        </Modal >
 
     )
 }
@@ -254,8 +285,8 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 export default CreatePost
 const styles = StyleSheet.create({
     imageList: {
-        marginTop: 40,
-        flex: 1
+        paddingTop: 20,
+        flex: 1,
     },
     parentContainer: {
         height: screenHeight,
@@ -324,12 +355,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column'
     },
     editor: {
-        position: "absolute",
         top: 0,
         marginLeft: "5%",
-        justifyContent: 'center',
         width: '90%',
-        flex: 1
     },
     toolOptionsWrapper: {
         position: 'absolute',
