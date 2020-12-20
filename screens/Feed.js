@@ -4,35 +4,55 @@ import {
     View,
     StyleSheet,
     TextInput,
-    FlatList,
-    TouchableOpacity,
-    Image
+    FlatList
 } from "react-native";
 import {
     responsiveFontSize,
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
-import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost"
 import Avatar from "../components/Avatar"
 import CreatePost from "../screens/CreatePost.js"
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import { LogBox } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
 
-const Feed = ({ navigation }) => {
+
+const Feed = ({ navigation}) => {
     const [data, setData] = useState([]);
+    const [userInfo, setUser] = useState({});
 
     const index = 0
     const count = 20
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
-    const setModalVisible = () => {
-        createPost.toggleModal();
-        console.log(createPost.state.modalVisible);
-    }
     useEffect(() => {
-        const url = `http://192.168.31.17:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const getUserInfo = async () => {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            if (savedToken === null) {
+                navigation.navigate('Login')
+            }
+            const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            if(json.code !== '1000'){
+                navigation.navigate('Login')
+            }else {
+                setUser(json.data);
+                console.log(json.data)
+            }
+        }
+
         const fetchResult = async () => {
+            let savedToken = await AsyncStorage.getItem('savedToken');
+            const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -43,27 +63,46 @@ const Feed = ({ navigation }) => {
             const json = await response.json();
             setData(json.data);
         }
+        getUserInfo()
         fetchResult()
     }, []);
     return (
-        
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
         >
-            <CreatePost ref={ref => { createPost = ref; }} />
+            {/* <CreatePost ref={ref => { createPost = ref; }} /> */}
             <View style={styles.headerContainer}>
-                <Avatar/>
+                <Avatar
+                    url = {userInfo.avatar}
+                />
                 <View style={styles.searchContainer}>
-                    <TextInput onFocus={()=>setModalVisible()} style={styles.search} placeholder="What's on your mind " />
+                    <TextInput onFocus={() => navigation.navigate(CreatePost)} style={styles.search} placeholder="What's on your mind " />
                 </View>
             </View>
-            <View style={styles.break}></View>    
-            <FlatList
+            <View style={styles.break}></View>
+            <FlatList 
                 style={styles.chatContainer}
+                data={data}
+                keyExtractor={({ id }, index) => id}
+                renderItem={({ item }) => (
+                    <FeedPost
+                        author = {item.author}
+                        id = {item.id}
+                        described = {item.described}
+                        status = {item.status}
+                        created = {item.created}
+                        modified = {item.modified}
+                        like = {item.like}
+                        comment = {item.comment}
+                        image = {item.image}
+                        is_liked = {item.is_liked}
+                        can_edit = {item.can_edit}
+                        can_comment = {item.can_comment}
+                        video = {item.video}
+                    />
+                )}
             />
-            <FeedPost/>
-            <FeedPost/>
         </ScrollView>
     );
 };

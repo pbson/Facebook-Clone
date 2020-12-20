@@ -48,7 +48,7 @@ const Photo = styled.Image`
 	height: 300px;
 `
 const Footer = styled.View`
-	padding: 0 11px;
+	padding: 0px 11px;
 `
 const FooterCount = styled.View`
 	flex-direction: row;
@@ -75,11 +75,10 @@ const Separator = styled.View`
 `
 const FooterMenu = styled.View`
 	flex-direction: row;
-	justify-content: space-between;
-	padding: 9px 0;
+	justify-content: space-around;
+	padding: 0px;
 `
-const Button = styled.TouchableOpacity`
-	flex-direction: row;
+const Button = styled.TouchableNativeFeedback`
 `
 const Icon = styled.View`
 	margin-right: 6px;
@@ -93,7 +92,7 @@ const BottomDivider = styled.View`
 	height: 9px;
 	background: #f0f2f5;
 `
-const FeedPost = () => {
+const FeedPost = ({author, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video}) => {
 	return (
 		<>
 			<Container>
@@ -149,37 +148,29 @@ const FeedPost = () => {
 					<Separator />
 
 					<FooterMenu>
-						<Button>
-							<Icon>
-								<AntDesign
-									name='like2'
-									size={20}
-									color='#424040'
-								/>
-							</Icon>
-							<Text>Like</Text>
-						</Button>
-
-						<Button>
-							<Icon>
-								<MaterialCommunityIcons
-									name='comment-outline'
-									size={20}
-									color='#424040'
-								/>
-							</Icon>
-							<Text>Comment</Text>
-						</Button>
-
-						<Button>
-							<Icon>
-								<MaterialCommunityIcons
-									name='share-outline'
-									size={20}
-									color='#424040'
-								/>
-							</Icon>
-							<Text>Share</Text>
+							<Button delayPressIn={0}>
+							<View style = {{flexDirection: "row", padding: 10 ,justifyContent: "center", width: "50%"}}>
+								<Icon>
+									<AntDesign
+										name='like2'
+										size={20}
+										color='#424040'
+									/>
+								</Icon>
+								<Text>Like</Text>
+								</View>
+							</Button>
+						<Button delayPressIn={0}>
+							<View style = {{ flexDirection: "row", padding: 10, justifyContent: "center",width: "50%" }}>
+								<Icon>
+									<MaterialCommunityIcons
+										name='comment-outline'
+										size={20}
+										color='#424040'
+									/>
+								</Icon>
+								<Text>Comment</Text>
+							</View>
 						</Button>
 					</FooterMenu>
 				</Footer>

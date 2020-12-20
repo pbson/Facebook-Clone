@@ -7,19 +7,16 @@ import {
     TouchableHighlight,
     Alert,
     Text,
-    Platform
 } from "react-native";
 import {
     responsiveFontSize,
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import * as Device from 'expo-device';
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeTab from "../navigations/HomeTab";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 const Login = ({ navigation }) => {
     const [isPhonenumberHighlighted, setPhonenumberIsHighlighted] = useState(false)
@@ -27,31 +24,38 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
+    const [hasUnsavedChanges, setUnsavedChanges] = useState(true);
 
-//    useEffect(() => {
- //       if (data.code != 0){
- //           Alert.alert('ohno')
- //       }
- //   }, []);
+    const registerForPushNotificationsAsync = async () => {
+        const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if (status != 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          // finalStatus = status;
+        }
+        if (status !== 'granted') {
+          alert('Failed to get push token for push notification!');
+          return;
+        }
+        let token = (await Notifications.getExpoPushTokenAsync()).data;
+        return token
+    };
 
-    const signInUser = () => {
-        Alert.alert(
-            "Alert Title",
-            "My Alert Msg",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-          );
+    useEffect(
+        () =>
+          navigation.addListener('beforeRemove', (e) => {
+            if (!hasUnsavedChanges) {
+                return;
+            }else{
+                e.preventDefault();
+                navigation.dispatch(e.data.action)
+            }
+          }),
+        [navigation, hasUnsavedChanges]
+      );
 
-        const deviceId = Constants.installationId;
-
-        let url = `http://localhost:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${deviceId}`
+    const signInUser = async () => {
+        let savedToken = await registerForPushNotificationsAsync();
+        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -64,18 +68,35 @@ const Login = ({ navigation }) => {
             setData(json);
             if (json.code !== '1000' ){
                 Alert.alert(
-                    "Alert Title",
-                    "Can't login at the moment, please try again",
+                    "Login fail",
+                    json.message,
                     [
                       { text: "OK", onPress: () => console.log("OK Pressed") }
                     ],
                     { cancelable: false }
                 );
             }else{
-                navigation.navigate(HomeTab)
+                await AsyncStorage.setItem('savedToken', json.data.token)
+                setUnsavedChanges(false)
+                navigation.navigate(HomeTab,{
+                    userId: json.data.id,
+                    userPhonenumber: json.data.phoneNumber,
+                    userAvatar: json.data.avatar
+                })
             }
         }
-        fetchResult()
+        try {
+            fetchResult()
+        } catch (error) {
+            Alert.alert(
+                "Login fail",
+                "Network is fuck up",
+                [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        }
     }
 
     return (
@@ -101,6 +122,7 @@ const Login = ({ navigation }) => {
                     onFocus={() => { setPasswordIsHighlighted(true) }}
                     onBlur={() => { setPasswordIsHighlighted(false) }}
                     placeholder="Password"
+                    secureTextEntry={true}
                 />
                 <View style={styles.signinButtonContainer}>
                     <TouchableHighlight

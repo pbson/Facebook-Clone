@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions'
 import { AsyncStorage, View, ScrollView, StyleSheet, StatusBar } from "react-native";
 import { FontAwesome5, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
