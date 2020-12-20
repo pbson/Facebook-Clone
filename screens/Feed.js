@@ -27,7 +27,6 @@ const Feed = ({ navigation}) => {
 
     const index = 0
     const count = 20
-
     useEffect(() => {
         const getUserInfo = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
