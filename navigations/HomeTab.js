@@ -9,7 +9,7 @@ import Feed from '../screens/Feed';
 import Watch from '../screens/Watch';
 import Notification from '../screens/Notification';
 import Friends from '../screens/Friends';
-import Profile from '../screens/Profile';
+import Profile2 from '../screens/Profile2';
 import Settings from '../screens/Settings';
 
 
@@ -21,12 +21,12 @@ const HomeTab = () => {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color }) => {
                     if (route.name == "Feed") {
-                        return (<MaterialCommunityIcons color={color} name="chat" size={responsiveFontSize(2.8)}/>)
+                        return (<MaterialCommunityIcons color={color} name="home" size={responsiveFontSize(2.8)}/>)
                     } else if (route.name == 'Friends') {
                         return (<MaterialIcons color={color} name="people" size={responsiveFontSize(2.8)}/>)
                     } else if (route.name == 'Watch') {
                         return (<MaterialIcons color={color} name="ondemand-video" size={responsiveFontSize(2.8)} />)
-                    } else if (route.name == 'Profile') {
+                    } else if (route.name == 'Profile2') {
                         return (<MaterialIcons color={color} name="account-circle" size={responsiveFontSize(2.8)} />)
                     } else if (route.name == 'Notification') {
                         return (<MaterialIcons color={color} name="notifications" size={responsiveFontSize(2.8)} />)
@@ -69,9 +69,9 @@ const HomeTab = () => {
                 options={{ tabBarLabel: 'Watch' }}
             />
             <Tab.Screen
-                name="Profile"
-                component={Profile}
-                options={{ tabBarLabel: 'Profile' }}
+                name="Profile2"
+                component={Profile2}
+                options={{ tabBarLabel: 'Profile2' }}
             />
             <Tab.Screen
                 name="Notification"

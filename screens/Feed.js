@@ -81,6 +81,12 @@ const Feed = ({ navigation}) => {
                 </View>
             </View>
             <View style={styles.break}></View>
+            <View>
+                <FeedPost
+                    navigation = {navigation}
+                />
+                <FeedPost/>
+            </View>
             <FlatList 
                 style={styles.chatContainer}
                 data={data}

@@ -53,8 +53,11 @@ const Watch = ({ navigation }) => {
             <FlatList
                 style={styles.chatContainer}
             />
-            <FeedPost/>
-            <FeedPost/>
+            <View>
+                <FeedPost/>
+                <FeedPost/>
+            </View>
+
         </ScrollView>
     );
 };
