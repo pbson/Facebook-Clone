@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost"
+import ProFile2 from './Profile2.js'
 
 
 const Watch = ({ navigation }) => {
@@ -53,6 +54,7 @@ const Watch = ({ navigation }) => {
             <FlatList
                 style={styles.chatContainer}
             />
+            <ProFile2 />
         </ScrollView>
     );
 };

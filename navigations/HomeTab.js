@@ -9,7 +9,7 @@ import Feed from '../screens/Feed';
 import Watch from '../screens/Watch';
 import Notification from '../screens/Notification';
 import Friends from '../screens/Friends';
-import Profile from '../screens/Profile';
+import Profile from '../screens/Profile.js';
 import Settings from '../screens/Settings';
 
 
@@ -71,7 +71,7 @@ const HomeTab = () => {
             <Tab.Screen
                 name="Profile"
                 component={Profile}
-                options={{ tabBarLabel: 'Profile' }}
+
             />
             <Tab.Screen
                 name="Notification"

@@ -43,7 +43,7 @@ useEffect(()=>{
                 
         </TouchableOpacity>
         {isDone&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{console.log(route.params,pass)}}  />   
+            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('HomeTab')}}  />   
             </View>}
         <View 
                 onPress={()=>navigation.navigate('Login')}
