@@ -12,6 +12,15 @@ import Login from '../screens/Login'
 import HomeTab from './HomeTab'
 import HomePageHeaderButton from '../components/HomePageHeaderButton';
 import CreatePost from '../screens/CreatePost.js'
+import SignUpNav from './SignUpNav.js'
+import AccountName from '../screens/Login_screens/AccountName.js'
+import UserGender from '../screens/Login_screens/UserGender.js'
+import CreateAccount from '../screens/Login_screens/CreateAccount.js'
+import Email from '../screens/Login_screens/Email.js'
+import UserBirth from '../screens/Login_screens/UserBirth.js'
+import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
+import CreatePassword from '../screens/Login_screens/CreatePassword.js'
+import Comment from '../screens/Comment'
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -61,6 +70,13 @@ const Navigator = () => {
                     name='CreatePost'
                     component={CreatePost}
                 />
+                <Stack.Screen name="CreateAccount" component={CreateAccount} />
+                <Stack.Screen name="AccountName" component={AccountName} />
+                <Stack.Screen name="UserBirth" component={UserBirth} />
+                <Stack.Screen name="UserGender" component={UserGender} />
+                <Stack.Screen name="UserPhoneNumber" component={UserPhoneNumber} />
+                <Stack.Screen name="Email" component={Email} />
+                <Stack.Screen name="CreatePassword" component={CreatePassword} />
                 <Stack.Screen
                     options={
                         ({ navigation }) => ({
@@ -110,6 +126,18 @@ const Navigator = () => {
                             //         </View>
                             //     )
                             // },
+                            headerLeftContainerStyle: {
+                                paddingHorizontal: 10
+                            }
+                        })
+                    }
+                />
+                <Stack.Screen
+                    name="Comment"
+                    component={Comment}
+                    options={
+                        ({ navigation, route }) => ({
+                            title: null,
                             headerLeftContainerStyle: {
                                 paddingHorizontal: 10
                             }

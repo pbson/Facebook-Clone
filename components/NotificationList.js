@@ -21,7 +21,7 @@ const NotificationList = ({ authorImg, from, to, time, isRead }) => {
                             <Text style={styles.notificationFillAuthor}>
                                 {from}
                             </Text>{" "}
-                            membalas komentar Anda di foto{" "}
+                            have a new message to{" "}
                             <Text style={styles.notificationFillAuthor}>
                                 {to}
                             </Text>

@@ -53,16 +53,16 @@ const Notification = ({ navigation }) => {
             />
             <NotificationList
                 authorImg={require("../src/img/photostatus.jpg")}
-                from="Muhammad Taufik Lewenussa"
-                to="Angga Syahputra Utama"
-                time="2 jam yang lalu"
+                from="Pham Ba Son"
+                to="Vu Ngoc Hien"
+                time="2 hour before"
                 isRead = {true}
             />
             <NotificationList
                 authorImg={require("../src/img/photostatus.jpg")}
-                from="Muhammad Taufik Lewenussa"
-                to="Angga Syahputra Utama"
-                time="2 jam yang lalu"
+                from="Pham Ba Son"
+                to="Vu Ngoc Hien"
+                time="2 hour before"
                 isRead = {false}
             />
         </ScrollView>

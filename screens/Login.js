@@ -140,7 +140,7 @@ const Login = ({ navigation }) => {
                 <View style={styles.signinButtonContainer}>
                     <TouchableHighlight
                         style={isPhonenumberHighlighted || isPasswordHighlighted ? styles.WithoutBannerSignupButton : styles.signupButton}
-                        onPress={() => Alert.alert('Simple Button pressed')}
+                        onPress={() => (navigation.navigate('CreateAccount'))}
                     >
                         <Text
                             style={isPhonenumberHighlighted || isPasswordHighlighted ? styles.WithoutBannerSignupButtonText : styles.signinButtonText}

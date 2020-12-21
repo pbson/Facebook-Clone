@@ -27,7 +27,6 @@ const Feed = ({ navigation}) => {
 
     const index = 0
     const count = 20
-
     useEffect(() => {
         const getUserInfo = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
@@ -82,6 +81,12 @@ const Feed = ({ navigation}) => {
                 </View>
             </View>
             <View style={styles.break}></View>
+            <View>
+                <FeedPost
+                    navigation = {navigation}
+                />
+                <FeedPost/>
+            </View>
             <FlatList 
                 style={styles.chatContainer}
                 data={data}
