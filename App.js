@@ -8,7 +8,7 @@ import SignUpNav from './navigations/SignUpNav.js'
 
 export default function App() {
   return (
-    <SignUpNav />
+    <Navigator />
   );
 }
 
