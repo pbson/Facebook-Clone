@@ -152,7 +152,7 @@ const Profile2 = (props) =>  {
 
       <Text style = {{
         color: 'gray',
-        margintop: 5,
+        marginTop: 5,
       }} >100 friends</Text>
 
       {/* list friend */}
