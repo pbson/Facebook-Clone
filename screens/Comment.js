@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { StyleSheet, View, Text, Image, Dimensions, ScrollView, SafeAreaView, TextInput  } from 'react-native';
+import { StyleSheet, View, Text, Image, Dimensions, ScrollView, SafeAreaView, TextInput, TouchableOpacity  } from 'react-native';
 import LikeIcon from '../assets/LikeIcon.png';
 import CoverPhoto from '../assets/coverPhoto.png';
 import Cam from '../assets/cam.png';
@@ -14,12 +14,12 @@ const Comment = ({ navigation }) => {
     <View style = {styles.container} >
 
         <View style = {styles.commentHeader}>
-            <View style = {styles.commentHeaderElement1}>
+            <TouchableOpacity style = {styles.commentHeaderElement1}>
                 <Image style = {styles.likeIcon} source = {LikeIcon} />
                 <Text style = {{
                     fontWeight: 'bold',
                 }} >100K</Text>
-            </View>
+            </TouchableOpacity>
         </View>
 
         
@@ -32,9 +32,8 @@ const Comment = ({ navigation }) => {
                     borderRadius: 10,
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    alignItems: "center",
-                    
-                }}>
+                    alignItems: "center", 
+                    }}>
                     <View style = {styles.textContainer} >
                         <Text style = {{
                             margin: 6,
@@ -144,6 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgray',
         borderRadius: 10,
         justifyContent: 'column',
+        marginRight: 5,
     },
     likeComment: {
         width: '95%',   
@@ -156,13 +156,14 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'white',
         alignItems: 'center',
-        height: '88%',
+        height: '86%',
+        marginTop: 10,
     },
     commentRow: {
         width: '98%',
         backgroundColor: 'white',
         flexDirection: 'row',
-        marginTop: 7,
+        marginTop: 10,
         justifyContent: 'space-between',
     },
     footer: {

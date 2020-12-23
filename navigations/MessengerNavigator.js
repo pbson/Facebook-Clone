@@ -20,7 +20,7 @@ import Email from '../screens/Login_screens/Email.js'
 import UserBirth from '../screens/Login_screens/UserBirth.js'
 import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
 import CreatePassword from '../screens/Login_screens/CreatePassword.js'
-
+import Comment from '../screens/Comment'
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -126,6 +126,18 @@ const Navigator = () => {
                             //         </View>
                             //     )
                             // },
+                            headerLeftContainerStyle: {
+                                paddingHorizontal: 10
+                            }
+                        })
+                    }
+                />
+                <Stack.Screen
+                    name="Comment"
+                    component={Comment}
+                    options={
+                        ({ navigation, route }) => ({
+                            title: null,
                             headerLeftContainerStyle: {
                                 paddingHorizontal: 10
                             }

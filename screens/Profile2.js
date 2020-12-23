@@ -4,6 +4,7 @@ import {
     View, 
     StyleSheet, 
     Image,
+    ScrollView,
     Button
 } from 'react-native';
 
@@ -30,20 +31,11 @@ import Camera from '../assets/cam2.png';
 import settingProfile from '../navigations/ProfileNavigator';
 import { Navigation } from 'react-native-navigation';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import FeedPost from '../components/FeedPost'
 
-export default function Profile(props)  {
+const Profile2 = (props) =>  {
   return( 
-  <View style= {styles.container} >
-    {/* header */}
-    <View style = {styles.topHearder}>
-      <Image style = {styles.hearderIcon} source = {HomeIcon}/>
-      <Image style = {styles.hearderIcon} source = {GroupIcon}/>
-      <Image style = {styles.hearderIcon} source = {Shop}/>
-      <Image style = {styles.hearderIcon} source = {ProfileIcon}/>
-      <Image style = {styles.hearderIcon} source = {Bell}/>
-      <Image style = {styles.hearderIcon} source = {SettingIcon}/>
-    </View>
-
+  <ScrollView style= {styles.container} >
     {/* coverPhoto */}
     <View style = {{   
       alignItems: 'center',
@@ -78,26 +70,13 @@ export default function Profile(props)  {
 
     {/* userName */}
     <Text style = {styles.userName}>Thế Tài</Text>
-    <Text style = {styles.shortBio}>Thích thả thính</Text>
-
-    <View style = {styles.tabAdd}>
-      <View style = {styles.addstory}>
-        <Image style = {styles.addIcon} source = {AddIcon} />
-        <Text style = {{
-          fontSize: 20,
-          color: 'white',
-          }} >Thêm vào tin</Text>
-      </View>
-      <View style = {styles.addOption}>
-        <Image style = {styles.option} source = {Option} />
-      </View>
-    </View>
+    <Text style = {styles.shortBio}>Love to flirt</Text>
 
     <View
         style={{
           borderBottomWidth: 1,
           borderBottomColor: 'lightgray',
-          width: 360,
+          width: "100%",
           marginTop: 10,
           marginLeft: 15,
         }} />
@@ -110,7 +89,7 @@ export default function Profile(props)  {
           marginTop: 3,
           marginLeft: 10,
           fontSize: 18
-        }} >Sống tại</Text>
+        }} >Live in</Text>
         <Text style = {{
           marginTop: 3,
           marginLeft: 5,
@@ -124,7 +103,7 @@ export default function Profile(props)  {
           marginTop: 3,
           marginLeft: 14,
           fontSize: 18
-        }} >Đến từ</Text>
+        }} >From</Text>
         <Text style = {{
           marginTop: 3,
           marginLeft: 5,
@@ -138,14 +117,14 @@ export default function Profile(props)  {
           marginTop: 3,
           marginLeft: 14,
           fontSize: 18
-        }} >Xem thông tin giới thiệu của bạn</Text>
+        }} >See your bio</Text>
       </View>
       <View style = {styles.editBio}>
         <Text style = {{
           fontSize: 15,
           fontWeight: 'bold',
           color: 'blue',
-        }} >Chỉnh sửa chi tiết công khai</Text>
+        }} >Edit Profile</Text>
       </View>
     </View>
     <View
@@ -164,17 +143,17 @@ export default function Profile(props)  {
         <Text style = {{
           fontWeight: 'bold',
           fontSize: 18,
-        }} >Bạn bè</Text>
+        }} >Friends</Text>
         <Text style = {{
           fontSize: 18,
           color: 'blue'
-        }} >Tìm bạn bè</Text>
+        }} >Find Friends</Text>
       </View>
 
       <Text style = {{
         color: 'gray',
         margintop: 5,
-      }} >100 người bạn</Text>
+      }} >100 friends</Text>
 
       {/* list friend */}
       <View style = {styles.friendContainer}>
@@ -212,7 +191,7 @@ export default function Profile(props)  {
           fontSize: 15,
           fontWeight: 'bold',
           color: 'black',
-        }} >Xem tất cả bạn bè</Text>
+        }} >See all friends</Text>
       </View>
     </View>
 
@@ -263,35 +242,12 @@ export default function Profile(props)  {
           width: '100%',
           marginTop: 10,
         }} />
-      <View style = {styles.postfooter}>
-        <View style = {styles.postLive}>
-          <Image style = {styles.liveicon} source = {LiveIcon} />
-          <Text style = {{fontSize: 13}} >Phát trực tiếp</Text>
-        </View>
-        <View style = {styles.postPhoto}>
-          <Image style = {styles.photoIcon} source = {PhotoIcon} />
-          <Text style = {{fontSize: 13}} >Ảnh</Text> 
-        </View>
-        <View style = {styles.postEvent}>
-          <Image style = {styles.eventIcon} source = {EventIcon} />
-          <Text style = {{fontSize: 13}}>Sự kiện</Text>
-        </View>
-      </View>
       <View
         style={{
           borderBottomWidth: 1,
           borderBottomColor: 'lightgray',
           width: '100%'
         }} />
-      
-      <View style = {styles.managePost}>
-        <Image style = {styles.managePostIcon} source = {ManagePost} />
-        <Text style = {{
-          fontSize: 15,
-          fontWeight: 'bold',
-          color: 'balck',
-        }} >Quản lý bài viết</Text>
-      </View>
     </View>
 
     <View
@@ -300,14 +256,19 @@ export default function Profile(props)  {
           borderBottomColor: 'lightgray',
           width: '100%'
         }} />
-  </View>
+      <View>
+        <FeedPost/>
+      </View>
+  </ScrollView>
 );
 }
+
+export default Profile2
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'white', 
+      backgroundColor: 'white',
     },
     topHearder: {
         height: 65, 
@@ -369,7 +330,7 @@ const styles = StyleSheet.create({
     },
     userName: {
       alignSelf: 'center',
-      marginTop: 90,
+      marginTop: 130,
       fontWeight: 'bold',
       fontSize: 27,
     },

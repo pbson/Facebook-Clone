@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet,TouchableNativeFeedback } from 'react-native'
 
 import styled from 'styled-components/native'
 
@@ -92,7 +92,10 @@ const BottomDivider = styled.View`
 	height: 9px;
 	background: #f0f2f5;
 `
-const FeedPost = ({author, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video}) => {
+const FeedPost = ({navigation, author, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video}) => {
+	const openCommentView= () => {
+		navigation.navigate('Comment')
+	}
 	return (
 		<>
 			<Container>
@@ -160,7 +163,7 @@ const FeedPost = ({author, id, described, status, created, modified, like, comme
 								<Text>Like</Text>
 								</View>
 							</Button>
-						<Button delayPressIn={0}>
+						<Button onPress={() => openCommentView()} delayPressIn={0}>
 							<View style = {{ flexDirection: "row", padding: 10, justifyContent: "center",width: "50%" }}>
 								<Icon>
 									<MaterialCommunityIcons
