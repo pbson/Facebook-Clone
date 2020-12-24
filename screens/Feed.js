@@ -76,45 +76,49 @@ const Feed = ({ navigation }) => {
         fetchResult()
     });
     return (
-        <ScrollView
-            contentContainerStyle={{ alignItems: "center" }}
-            style={styles.container}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-        >
-            <View style={styles.headerContainer}>
-                <Avatar
-                    url={userInfo.avatar}
-                />
-                <View style={styles.searchContainer}>
-                    <TextInput onFocus={() => navigation.navigate(CreatePost)} style={styles.search} placeholder="What's on your mind " />
-                </View>
-            </View>
-            <View style={styles.break}></View>
-            <FlatList
-                style={styles.chatContainer}
-                data={data}
-                keyExtractor={({ id }, index) => id}
-                renderItem={({ item }) => (
-                    <FeedPost
-                        avatar={item.author.avatar}
-                        id={item.id}
-                        described={item.described}
-                        status={item.status}
-                        created={item.created}
-                        modified={item.modified}
-                        like={item.like}
-                        comment={item.comment}
-                        image={item.image}
-                        is_liked={item.is_liked}
-                        can_edit={item.can_edit}
-                        can_comment={item.can_comment}
-                        video={item.video}
+        <View style={styles.container}>
+            <ScrollView
+                contentContainerStyle={{ alignItems: "center" }}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <View style={styles.headerContainer}>
+                    <Avatar
+                        url={userInfo.avatar}
                     />
-                )}
-            />
-        </ScrollView>
+                    <View style={styles.searchContainer}>
+                        <TextInput onFocus={() => navigation.navigate(CreatePost)} style={styles.search} placeholder="What's on your mind " />
+                    </View>
+                </View>
+                <View style={styles.break}></View>
+                <FlatList
+                    inverted
+                    style={styles.chatContainer}
+                    data={data}
+                    keyExtractor={({ id }, index) => id}
+                    renderItem={({ item }) => (
+                        <FeedPost
+                            navigation={navigation}
+                            avatar={item.author.avatar}
+                            id={item.id}
+                            described={item.described}
+                            username={item.author.name}
+                            created={item.created}
+                            modified={item.modified}
+                            like={item.like}
+                            comment={item.comment}
+                            image={item.image}
+                            is_liked={item.isLiked}
+                            can_edit={item.can_edit}
+                            can_comment={item.can_comment}
+                            video={item.video}
+                        />
+                    )}
+                />
+            </ScrollView>
+        </View>
+
     );
 };
 
@@ -161,10 +165,6 @@ const styles = StyleSheet.create({
         height: responsiveHeight(13),
         width: responsiveWidth(100),
         marginVertical: 5,
-    },
-    chatContainer: {
-        width: responsiveWidth(100),
-        height: responsiveHeight(100),
     },
     name: {
         flex: 1,
