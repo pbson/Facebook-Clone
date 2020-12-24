@@ -43,19 +43,14 @@ const Login = ({ navigation }) => {
     useEffect(
         () =>
           navigation.addListener('beforeRemove', (e) => {
-            if (!hasUnsavedChanges) {
-                return;
-            }else{
-                e.preventDefault();
-                navigation.dispatch(e.data.action)
-            }
+            e.preventDefault();
           }),
         [navigation, hasUnsavedChanges]
       );
 
     const signInUser = async () => {
         let savedToken = await registerForPushNotificationsAsync();
-        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
+        let url = `http://94e260158450.ngrok.io/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',

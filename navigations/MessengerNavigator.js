@@ -21,6 +21,7 @@ import UserBirth from '../screens/Login_screens/UserBirth.js'
 import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
 import CreatePassword from '../screens/Login_screens/CreatePassword.js'
 import Comment from '../screens/Comment'
+import Welcome from '../screens/Welcome'
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -30,7 +31,17 @@ const Navigator = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator>                
+            <Stack.Screen
+                    options={
+                        ({ navigation }) => ({
+                            headerShown: false,
+                            title: null
+                        })
+                    }
+                    name='Welcome'
+                    component={Welcome}
+            />
                 <Stack.Screen
                     options={
                         ({ navigation }) => ({

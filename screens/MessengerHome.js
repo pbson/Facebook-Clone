@@ -35,7 +35,7 @@ const MessengerHome = ({ navigation }) => {
         if (savedToken === null) {
             navigation.navigate('Login')
         }
-        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const url = `http://94e260158450.ngrok.io/it4788/user/get_user_info?token=${savedToken}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -53,6 +53,7 @@ const MessengerHome = ({ navigation }) => {
     const fetchListFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
         const url = `http://192.168.0.140:3000/it4788/user/get_list_friends?token=${savedToken}`
+        console.log(url)
         const response = await fetch(url, {
             method: 'POST',
             headers: {

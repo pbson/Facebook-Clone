@@ -30,10 +30,10 @@ import Camera from '../assets/cam2.png';
 
 import settingProfile from '../navigations/ProfileNavigator';
 import { Navigation } from 'react-native-navigation';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import FeedPost from '../components/FeedPost'
 
-const Profile2 = (props) =>  {
+const Profile2 = ({navigation}) =>  {
   return( 
   <ScrollView style= {styles.container} >
     {/* coverPhoto */}
@@ -119,12 +119,8 @@ const Profile2 = (props) =>  {
           fontSize: 18
         }} >See your bio</Text>
       </View>
-      <View style = {styles.editBio}>
-        <Text style = {{
-          fontSize: 15,
-          fontWeight: 'bold',
-          color: 'blue',
-        }} >Edit Profile</Text>
+      <View  style = {styles.editBio}>
+        <Button onPress={()=>navigation.navigate('EditProfile')} title="Edit Profile" color={'blue'} fontSize={15} fontWeight={'bold'} />
       </View>
     </View>
     <View
@@ -152,7 +148,7 @@ const Profile2 = (props) =>  {
 
       <Text style = {{
         color: 'gray',
-        margintop: 5,
+        marginTop: 5,
       }} >100 friends</Text>
 
       {/* list friend */}
