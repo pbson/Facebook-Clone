@@ -38,7 +38,7 @@ const PersonalinfoSetting = ({ navigation }) => {
                 <TouchableOpacity onPress = {onPress} >
                 <View style = {styles.name} >
                     <View>
-                        <Text style = {{fontSize: 18, fontWeight: 550}}>Name</Text>
+                        <Text style = {{fontSize: 18, fontWeight: '500'}}>Name</Text>
                         <Text style = {{fontSize: 15, color: 'gray'}}>User name</Text>
                     </View>
                     <View>
