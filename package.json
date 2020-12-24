@@ -43,6 +43,7 @@
     "react-native-image-slider-box": "^1.0.12",
     "react-native-input-scroll-view": "^1.11.0",
     "react-native-masonry-list": "^2.16.1",
+    "react-native-modal-datetime-picker": "^9.1.0",
     "react-native-navigation": "^7.6.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-responsive-dimensions": "^3.1.1",
