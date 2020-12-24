@@ -13,31 +13,61 @@ import styled from 'styled-components/native'
 import {
 	Entypo,
 	AntDesign,
-	MaterialCommunityIcons
+	MaterialCommunityIcons,
+	MaterialIcons
 } from '@expo/vector-icons'
 import Avatar from './Avatar'
 import MasonryList from "react-native-masonry-list";
+import Comment from '../screens/Comment'
+import ImageSlider from 'react-native-image-slider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SliderBox } from "react-native-image-slider-box";
 
-const FeedPost = ({ navigation, avatar, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video }) => {
-	const [images, setImage] = useState([]);
+const FeedPost = ({ route, navigation, avatar, id, described, username, created, modified, like, comment, image, is_liked, can_edit, can_comment, video }) => {
+	const [images, setImage] = useState(false);
+	const [likes, setLike] = useState(like);
+	const [likeText, setLikeText] = useState(`${like}`);
+	const [isLiked, setIsLikeText] = useState(is_liked);
 
 	useEffect(() => {
-		const listImage = () => {
-			if (!image) {
-				setImage([])
-			} else {
-				let newImage = image.map(img => {
-					return { source: {uri: img} }
-				});
-				setImage(newImage)
-			}
+		if (image) {
+			setImage(image.length > 0)
 		}
-		listImage()
-		console.log(images)
 	}, [])
 
 	const openCommentView = () => {
-		navigation.navigate('Comment')
+		let postId = {
+			id: id,
+			like: likes
+		}
+		navigation.navigate('Comment', postId)
+	}
+
+	const likePost = async () => {
+		let savedToken = await AsyncStorage.getItem('savedToken');
+		const url = `http://192.168.0.140:3000/it4788/post/like?token=${savedToken}&id=${id}`
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			}
+		})
+		const json = await response.json();
+		console.log(json);
+		if (json.data.isliked === true && json.data.like == 1) {
+			setLike(json.data.like)
+			setLikeText(`You liked this post`)
+			setIsLikeText(true)
+		} else if (json.data.isliked === true && json.data.like > 1) {
+			setLike(json.data.like)
+			setLikeText(`You and ${like} others`)
+			setIsLikeText(true)
+		} else {
+			setLike(json.data.like)
+			setLikeText(`${json.data.like}`)
+			setIsLikeText(false)
+		}
 	}
 	return (
 		<View style={styles.Container}>
@@ -45,9 +75,9 @@ const FeedPost = ({ navigation, avatar, id, described, status, created, modified
 				<View style={styles.HeaderName}>
 					<Avatar url={avatar} />
 					<View style={{ paddingLeft: 10 }}>
-						<Text style={styles.User}>Regi P</Text>
+						<Text style={styles.User}>{username}</Text>
 						<View style={styles.Row}>
-							<Text style={styles.Time}>9m</Text>
+							<Text style={styles.Time}>{created}</Text>
 							<Entypo
 								name='dot-single'
 								size={12}
@@ -70,14 +100,16 @@ const FeedPost = ({ navigation, avatar, id, described, status, created, modified
 			</View>
 
 			<Text style={styles.Post}>
-				Crie na prática uma aplicação utilizando NextJS,
-				ReactJS, React Native e Strap Api.
-				</Text>
-			<View style={styles.imageList}>
-				<MasonryList
-					images={images}
-				/>
-			</View>
+				{described}
+			</Text>
+			{ images ?
+				<View style={styles.imageList}>
+					<SliderBox
+						images={image}
+					/>
+				</View>
+				: null
+			}
 			<View style={styles.Footer}>
 				<View style={styles.FooterCount}>
 					<View style={styles.Row}>
@@ -88,23 +120,32 @@ const FeedPost = ({ navigation, avatar, id, described, status, created, modified
 								color='#FFFFFF'
 							/>
 						</View>
-						<Text style={styles.TextCount}>88 likes</Text>
+						<Text style={styles.TextCount}>{likeText}</Text>
 					</View>
-					<Text style={styles.TextCount}>2k comments</Text>
+					<Text style={styles.TextCount}>{comment} comments</Text>
 				</View>
 
 				<View style={styles.Separator} />
 
 				<View style={styles.FooterMenu}>
-					<TouchableNativeFeedback delayPressIn={0}>
+					<TouchableNativeFeedback onPress={() => likePost()} delayPressIn={0}>
 						<View style={{ flexDirection: "row", padding: 10, justifyContent: "center", width: "50%" }}>
-							<View style={styles.Icon}>
-								<AntDesign
-									name='like2'
-									size={20}
-									color='#424040'
-								/>
-							</View>
+							{isLiked ?
+								<View style={styles.Icon}>
+									<AntDesign
+										name='like1'
+										size={20}
+										color='#0078ff'
+									/>
+								</View> : 
+								<View style={styles.Icon}>
+									<AntDesign
+										name='like2'
+										size={20}
+										color='grey'
+									/>
+								</View>
+							}
 							<Text style={styles.thisText}>Like</Text>
 						</View>
 					</TouchableNativeFeedback>
@@ -134,8 +175,9 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	imageList: {
-		paddingTop: 20,
+		paddingTop: 10,
 		flex: 1,
+		height: 300
 	},
 	HeaderName: {
 		flexDirection: 'row',
