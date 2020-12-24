@@ -21,6 +21,7 @@ import UserBirth from '../screens/Login_screens/UserBirth.js'
 import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
 import CreatePassword from '../screens/Login_screens/CreatePassword.js'
 import Comment from '../screens/Comment'
+import Setting from '../screens/Settings'
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -70,6 +71,7 @@ const Navigator = () => {
                     name='CreatePost'
                     component={CreatePost}
                 />
+                <Stack.Screen name = "Setting" component = {Setting} />
                 <Stack.Screen name="CreateAccount" component={CreateAccount} />
                 <Stack.Screen name="AccountName" component={AccountName} />
                 <Stack.Screen name="UserBirth" component={UserBirth} />
