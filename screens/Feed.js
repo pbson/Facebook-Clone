@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     TextInput,
-    FlatList
+    FlatList,
+    RefreshControl
 } from "react-native";
 import {
     responsiveFontSize,
@@ -18,94 +19,98 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- 
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
-
-const Feed = ({ navigation}) => {
+const Feed = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [userInfo, setUser] = useState({});
 
     const index = 0
     const count = 20
-    useEffect(() => {
-        const getUserInfo = async () => {
-            let savedToken = await AsyncStorage.getItem('savedToken');
-            if (savedToken === null) {
-                navigation.navigate('Login')
+    const getUserInfo = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             }
-            const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            if(json.code !== '1000'){
-                navigation.navigate('Login')
-            }else {
-                setUser(json.data);
-                console.log(json.data)
-            }
+        })
+        const json = await response.json();
+        if (json.code !== '1000') {
+            navigation.navigate('Login')
+        } else {
+            setUser(json.data);
         }
+    }
 
-        const fetchResult = async () => {
-            let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            setData(json.data);
-        }
+    const fetchResult = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setData(json.data.post);
+    }
+    useEffect(() => {
         getUserInfo()
         fetchResult()
     }, []);
+    ///////////////////////////////// Pull down to refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        getUserInfo()
+        fetchResult()
+    });
     return (
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
         >
-            {/* <CreatePost ref={ref => { createPost = ref; }} /> */}
             <View style={styles.headerContainer}>
                 <Avatar
-                    url = {userInfo.avatar}
+                    url={userInfo.avatar}
                 />
                 <View style={styles.searchContainer}>
                     <TextInput onFocus={() => navigation.navigate(CreatePost)} style={styles.search} placeholder="What's on your mind " />
                 </View>
             </View>
             <View style={styles.break}></View>
-            <View>
-                <FeedPost
-                    navigation = {navigation}
-                />
-                <FeedPost/>
-            </View>
-            <FlatList 
+            <FlatList
                 style={styles.chatContainer}
                 data={data}
                 keyExtractor={({ id }, index) => id}
                 renderItem={({ item }) => (
                     <FeedPost
-                        author = {item.author}
-                        id = {item.id}
-                        described = {item.described}
-                        status = {item.status}
-                        created = {item.created}
-                        modified = {item.modified}
-                        like = {item.like}
-                        comment = {item.comment}
-                        image = {item.image}
-                        is_liked = {item.is_liked}
-                        can_edit = {item.can_edit}
-                        can_comment = {item.can_comment}
-                        video = {item.video}
+                        avatar={item.author.avatar}
+                        id={item.id}
+                        described={item.described}
+                        status={item.status}
+                        created={item.created}
+                        modified={item.modified}
+                        like={item.like}
+                        comment={item.comment}
+                        image={item.image}
+                        is_liked={item.is_liked}
+                        can_edit={item.can_edit}
+                        can_comment={item.can_comment}
+                        video={item.video}
                     />
                 )}
             />
@@ -158,7 +163,8 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     chatContainer: {
-        width: responsiveWidth(100)
+        width: responsiveWidth(100),
+        height: responsiveHeight(100),
     },
     name: {
         flex: 1,

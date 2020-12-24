@@ -43,12 +43,7 @@ const Login = ({ navigation }) => {
     useEffect(
         () =>
           navigation.addListener('beforeRemove', (e) => {
-            if (!hasUnsavedChanges) {
-                return;
-            }else{
-                e.preventDefault();
-                navigation.dispatch(e.data.action)
-            }
+            e.preventDefault();
           }),
         [navigation, hasUnsavedChanges]
       );

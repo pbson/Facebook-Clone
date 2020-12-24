@@ -1,8 +1,13 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { View, StyleSheet,TouchableNativeFeedback } from 'react-native'
-
+import {
+	TouchableNativeFeedback,
+	View,
+	StyleSheet,
+	Text,
+	Image
+} from "react-native";
 import styled from 'styled-components/native'
 
 import {
@@ -11,184 +16,216 @@ import {
 	MaterialCommunityIcons
 } from '@expo/vector-icons'
 import Avatar from './Avatar'
+import MasonryList from "react-native-masonry-list";
 
-const Container = styled.View`
-	flex: 1;
-`
-const Header = styled.View`
-	height: 50px;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 6px;
-	padding: 0 11px;
-`
-const Row = styled.View`
-	align-items: center;
-	flex-direction: row;
-`
-const User = styled.Text`
-	font-size: 12px;
-	font-weight: bold;
-	color: #222121;
-`
-const Time = styled.Text`
-	font-size: 9px;
-	color: #747476;
-`
-const Post = styled.Text`
-	font-size: 12px;
-	color: #222121;
-	line-height: 16px;
-	padding: 0 11px;
-`
-const Photo = styled.Image`
-	margin-top: 9px;
-	width: 100%;
-	height: 300px;
-`
-const Footer = styled.View`
-	padding: 0px 11px;
-`
-const FooterCount = styled.View`
-	flex-direction: row;
-	justify-content: space-between;
-	padding: 9px 0;
-`
-const IconCount = styled.View`
-	background: #1878f3;
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	align-items: center;
-	justify-content: center;
-	margin-right: 6px;
-`
-const TextCount = styled.Text`
-	font-size: 11px;
-	color: #424040;
-`
-const Separator = styled.View`
-	width: 100%;
-	height: 1px;
-	background: #f9f9f9;
-`
-const FooterMenu = styled.View`
-	flex-direction: row;
-	justify-content: space-around;
-	padding: 0px;
-`
-const Button = styled.TouchableNativeFeedback`
-`
-const Icon = styled.View`
-	margin-right: 6px;
-`
-const Text = styled.Text`
-	font-size: 12px;
-	color: #424040;
-`
-const BottomDivider = styled.View`
-	width: 100%;
-	height: 9px;
-	background: #f0f2f5;
-`
-const FeedPost = ({navigation, author, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video}) => {
-	const openCommentView= () => {
+const FeedPost = ({ navigation, avatar, id, described, status, created, modified, like, comment, image, is_liked, can_edit, can_comment, video }) => {
+	const [images, setImage] = useState([]);
+
+	useEffect(() => {
+		const listImage = () => {
+			if (!image) {
+				setImage([])
+			} else {
+				let newImage = image.map(img => {
+					return { source: {uri: img} }
+				});
+				setImage(newImage)
+			}
+		}
+		listImage()
+		console.log(images)
+	}, [])
+
+	const openCommentView = () => {
 		navigation.navigate('Comment')
 	}
 	return (
-		<>
-			<Container>
-				<Header>
-					<Row>
-						<Avatar />
-						<View style={{ paddingLeft: 10 }}>
-							<User>Regi P</User>
-							<Row>
-								<Time>9m</Time>
-								<Entypo
-									name='dot-single'
-									size={12}
-									color='#747476'
-								/>
-								<Entypo
-									name='globe'
-									size={10}
-									color='#747476'
-								/>
-							</Row>
+		<View style={styles.Container}>
+			<View style={styles.Header}>
+				<View style={styles.HeaderName}>
+					<Avatar url={avatar} />
+					<View style={{ paddingLeft: 10 }}>
+						<Text style={styles.User}>Regi P</Text>
+						<View style={styles.Row}>
+							<Text style={styles.Time}>9m</Text>
+							<Entypo
+								name='dot-single'
+								size={12}
+								color='#747476'
+							/>
+							<Entypo
+								name='globe'
+								size={10}
+								color='#747476'
+							/>
 						</View>
-					</Row>
+					</View>
+				</View>
 
-					<Entypo
-						name='dots-three-horizontal'
-						size={15}
-						color='#222121'
-					/>
-				</Header>
+				<Entypo
+					name='dots-three-horizontal'
+					size={15}
+					color='#222121'
+				/>
+			</View>
 
-				<Post>
-					Crie na prática uma aplicação utilizando NextJS,
-					ReactJS, React Native e Strap Api.
-				</Post>
-				<Photo source={require('../assets/post1.jpg')} />
+			<Text style={styles.Post}>
+				Crie na prática uma aplicação utilizando NextJS,
+				ReactJS, React Native e Strap Api.
+				</Text>
+			<View style={styles.imageList}>
+				<MasonryList
+					images={images}
+				/>
+			</View>
+			<View style={styles.Footer}>
+				<View style={styles.FooterCount}>
+					<View style={styles.Row}>
+						<View style={styles.IconCount}>
+							<AntDesign
+								name='like1'
+								size={12}
+								color='#FFFFFF'
+							/>
+						</View>
+						<Text style={styles.TextCount}>88 likes</Text>
+					</View>
+					<Text style={styles.TextCount}>2k comments</Text>
+				</View>
 
-				<Footer>
-					<FooterCount>
-						<Row>
-							<IconCount>
+				<View style={styles.Separator} />
+
+				<View style={styles.FooterMenu}>
+					<TouchableNativeFeedback delayPressIn={0}>
+						<View style={{ flexDirection: "row", padding: 10, justifyContent: "center", width: "50%" }}>
+							<View style={styles.Icon}>
 								<AntDesign
-									name='like1'
-									size={12}
-									color='#FFFFFF'
+									name='like2'
+									size={20}
+									color='#424040'
 								/>
-							</IconCount>
-							<TextCount>88 likes</TextCount>
-						</Row>
-						<TextCount>2k comments</TextCount>
-					</FooterCount>
-
-					<Separator />
-
-					<FooterMenu>
-							<Button delayPressIn={0}>
-							<View style = {{flexDirection: "row", padding: 10 ,justifyContent: "center", width: "50%"}}>
-								<Icon>
-									<AntDesign
-										name='like2'
-										size={20}
-										color='#424040'
-									/>
-								</Icon>
-								<Text>Like</Text>
-								</View>
-							</Button>
-						<Button onPress={() => openCommentView()} delayPressIn={0}>
-							<View style = {{ flexDirection: "row", padding: 10, justifyContent: "center",width: "50%" }}>
-								<Icon>
-									<MaterialCommunityIcons
-										name='comment-outline'
-										size={20}
-										color='#424040'
-									/>
-								</Icon>
-								<Text>Comment</Text>
 							</View>
-						</Button>
-					</FooterMenu>
-				</Footer>
-				<BottomDivider />
-			</Container>
+							<Text style={styles.thisText}>Like</Text>
+						</View>
+					</TouchableNativeFeedback>
+					<TouchableNativeFeedback onPress={() => openCommentView()} delayPressIn={0}>
+						<View style={{ flexDirection: "row", padding: 10, justifyContent: "center", width: "50%" }}>
+							<View>
+								<MaterialCommunityIcons
+									name='comment-outline'
+									size={20}
+									color='#424040'
+								/>
+							</View>
+							<Text style={styles.thisText}>Comment</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+			</View>
 			<View style={styles.break}></View>
-		</>
+		</View>
 	)
 }
 
 export default FeedPost
 
 const styles = StyleSheet.create({
+	Container: {
+		flex: 1
+	},
+	imageList: {
+		paddingTop: 20,
+		flex: 1,
+	},
+	HeaderName: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	Header: {
+		"height": 50,
+		"flexDirection": "row",
+		"alignItems": "center",
+		"justifyContent": "space-between",
+		"paddingVertical": 5,
+		"paddingHorizontal": 10,
+		marginTop: 10
+		// "padding": "0 11"
+	},
+	Row: {
+		"alignItems": "center",
+		"flexDirection": "row"
+	},
+	User: {
+		"fontSize": 12,
+		"fontWeight": "bold",
+		"color": "#222121"
+	},
+	Time: {
+		"fontSize": 9,
+		"color": "#747476"
+	},
+	Post: {
+		"fontSize": 12,
+		"color": "#222121",
+		"lineHeight": 16,
+		// "padding": "0 11"
+		"paddingVertical": 10,
+		"paddingHorizontal": 15
+	},
+	Photo: {
+		"marginTop": 9,
+		"width": "100%",
+		"height": 300
+	},
+	Footer: {
+		// "padding": "0 11"
+		"paddingVertical": 0,
+		"paddingHorizontal": 15
+	},
+	FooterCount: {
+		"flexDirection": "row",
+		"justifyContent": "space-between",
+		"paddingVertical": 9,
+		"paddingHorizontal": 0
+		// "padding": "9 0"
+	},
+	IconCount: {
+		"backgroundColor": "#1878f3",
+		"width": 20,
+		"height": 20,
+		"borderRadius": 10,
+		"alignItems": "center",
+		"justifyContent": "center",
+		"marginRight": 6
+	},
+	TextCount: {
+		"fontSize": 11,
+		"color": "#424040"
+	},
+	Separator: {
+		"width": "100%",
+		"height": 1,
+		"backgroundColor": "#f9f9f9"
+	},
+	FooterMenu: {
+		"flexDirection": "row",
+		"justifyContent": "space-around",
+		"padding": 0
+	},
+	Icon: {
+		"marginRight": 6
+	},
+	Text: {
+		"fontSize": 12,
+		"color": "#424040"
+	},
+	BottomDivider: {
+		"width": "100%",
+		"height": 9,
+		"backgroundColor": "#f0f2f5"
+	},
 	break: {
-
 		backgroundColor: '#CCC',
 		height: 8,
 		width: "100%"

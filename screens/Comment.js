@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'lightgray',
         borderRadius: 10,
-        justifyContent: 'column',
+        // justifyContent: 'column',
         marginRight: 5,
     },
     likeComment: {
