@@ -22,6 +22,14 @@ import UserPhoneNumber from '../screens/Login_screens/UserPhoneNumber.js'
 import CreatePassword from '../screens/Login_screens/CreatePassword.js'
 import Comment from '../screens/Comment'
 import Welcome from '../screens/Welcome'
+import setting from '../screens/Settings.js';
+import accountSetting from '../screens/AccountSetting.js';
+import nameSetting from '../screens/NameSetting.js';
+import profile from '../screens/Profile2.js'
+import passwordSetting from '../screens/PasswordSetting.js'
+import personalinfoSetting from '../screens/PersonalinfoSetting.js';
+import passChange from '../screens/PassChange.js'
+
 
 
 // import {socket} from '../chatSocket/chatAction'
@@ -31,7 +39,14 @@ const Navigator = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>                
+            <Stack.Navigator>     
+            <Stack.Screen name = 'setting' component = {setting}/>
+            <Stack.Screen name = 'accountSetting' component = {accountSetting}/>
+            <Stack.Screen name = 'personalinfoSetting' component = {personalinfoSetting} />
+            <Stack.Screen name = 'nameSetting' component = {nameSetting} />
+            <Stack.Screen name = 'profile' component = {profile} />
+            <Stack.Screen name = 'passwordSetting' component = {passwordSetting} />
+            <Stack.Screen name = 'passChange' component = {passChange} />           
             <Stack.Screen
                     options={
                         ({ navigation }) => ({
