@@ -95,7 +95,11 @@ const styles = StyleSheet.create({
     nameTitle: {
         margin: 7,
         fontSize: 18,
+<<<<<<< HEAD
         // fontWeight: 700,
+=======
+        fontWeight: "700",
+>>>>>>> c0a47dc0b8fb7d4f24b81ee53a3950b307d92bf2
         marginTop: 10
     },
     back: {

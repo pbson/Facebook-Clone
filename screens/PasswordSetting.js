@@ -40,7 +40,7 @@ const PasswordSetting = ({ navigation }) => {
                 <View style = {styles.name} >
                     <Image style = {styles.keyIcon} source = {KeyIcon} />
                     <View>
-                        <Text style = {{fontSize: 18, fontWeight: 550}}>Change password</Text>
+                        <Text style = {{fontSize: 18, fontWeight: '500'}}>Change password</Text>
                         <Text style = {{fontSize: 15, color: 'gray'}}>It's the good idea to use a strong password</Text>
                     </View>
                     <View>

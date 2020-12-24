@@ -19,9 +19,9 @@ import {
 import Avatar from './Avatar'
 import MasonryList from "react-native-masonry-list";
 import Comment from '../screens/Comment'
-import ImageSlider from 'react-native-image-slider';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SliderBox } from "react-native-image-slider-box";
+
 
 const FeedPost = ({ route, navigation, avatar, id, described, username, created, modified, like, comment, image, is_liked, can_edit, can_comment, video }) => {
 	const [images, setImage] = useState(false);
