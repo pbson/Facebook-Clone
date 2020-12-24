@@ -27,12 +27,13 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 	const [images, setImage] = useState(false);
 	const [likes, setLike] = useState(like);
 	const [likeText, setLikeText] = useState(`${like}`);
-	const [isLiked, setIsLikeText] = useState(is_liked);
+	const [isLiked, setIsLike] = useState(is_liked);
 
 	useEffect(() => {
 		if (image) {
 			setImage(image.length > 0)
 		}
+		setIsLike(is_liked);
 	}, [])
 
 	const openCommentView = () => {
@@ -58,15 +59,15 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 		if (json.data.isliked === true && json.data.like == 1) {
 			setLike(json.data.like)
 			setLikeText(`You liked this post`)
-			setIsLikeText(true)
+			setIsLike(true)
 		} else if (json.data.isliked === true && json.data.like > 1) {
 			setLike(json.data.like)
 			setLikeText(`You and ${like} others`)
-			setIsLikeText(true)
+			setIsLike(true)
 		} else {
 			setLike(json.data.like)
 			setLikeText(`${json.data.like}`)
-			setIsLikeText(false)
+			setIsLike(false)
 		}
 	}
 	return (

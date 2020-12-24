@@ -60,6 +60,7 @@ const Feed = ({ navigation }) => {
             }
         })
         const json = await response.json();
+        console.log(json.data.post)
         setData(json.data.post);
     }
     useEffect(() => {
@@ -109,7 +110,7 @@ const Feed = ({ navigation }) => {
                             like={item.like}
                             comment={item.comment}
                             image={item.image}
-                            is_liked={item.isLiked}
+                            is_liked={item.is_liked}
                             can_edit={item.can_edit}
                             can_comment={item.can_comment}
                             video={item.video}
