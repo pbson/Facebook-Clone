@@ -12,12 +12,15 @@ import Friends from '../screens/Friends';
 import Profile2 from '../screens/Profile2';
 import Settings from '../screens/Settings';
 import ProfileNav from './ProfileNav.js'
-
+import EditProfile from '../screens/editProfile/EditProfile.js'
+import EditInfo from '../screens/editProfile/EditInfo.js'
+import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeTab = () => {
+const HomeTab = ({navigation}) => {
     return (
+
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color }) => {
@@ -84,7 +87,9 @@ const HomeTab = () => {
                 component={Settings}
                 options={{ tabBarLabel: 'Settings' }}
             />
+           
         </Tab.Navigator>
+
     );
 }
 
