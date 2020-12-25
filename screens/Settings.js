@@ -37,7 +37,7 @@ const Watch = ({ navigation }) => {
     }
 
     useEffect(() => {
-        const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const url = `http://94e260158450.ngrok.io/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',

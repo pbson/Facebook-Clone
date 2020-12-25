@@ -11,6 +11,7 @@ import Notification from '../screens/Notification';
 import Friends from '../screens/Friends';
 import Profile2 from '../screens/Profile2';
 import Settings from '../screens/Settings';
+import ProfileNav from './ProfileNav.js'
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -70,7 +71,7 @@ const HomeTab = () => {
             />
             <Tab.Screen
                 name="Profile2"
-                component={Profile2}
+                component={ProfileNav}
                 options={{ tabBarLabel: 'Profile2' }}
             />
             <Tab.Screen
@@ -89,6 +90,4 @@ const HomeTab = () => {
 
 export default HomeTab;
 
-const styles = StyleSheet.create({
 
-});
