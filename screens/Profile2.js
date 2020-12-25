@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { 
     Text, 
     View, 
@@ -32,15 +32,41 @@ import settingProfile from '../navigations/ProfileNavigator';
 import { Navigation } from 'react-native-navigation';
 import { TextInput, TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import FeedPost from '../components/FeedPost'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile2 = ({navigation}) =>  {
+  const [userInfo, setUser] = useState({});
+
+  const getUserInfo = async () => {
+    let savedToken = await AsyncStorage.getItem('savedToken');
+    const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+    const json = await response.json();
+    if (json.code !== '1000') {
+        navigation.navigate('Login')
+    } else {
+        setUser(json.data);
+        console.log(json.data)
+    }
+}
+
+useEffect(() => {
+    getUserInfo()
+}, []);
+
   return( 
   <ScrollView style= {styles.container} >
     {/* coverPhoto */}
     <View style = {{   
       alignItems: 'center',
     }}>
-     <Image source = {CoverPhoto} style = {styles.coverPhoto}/>
+     <Image source = {{uri: userInfo.cover_image}} style = {styles.coverPhoto}/>
      <TouchableNativeFeedback style = {styles.camCover}>
       <View style = {styles.cam} >
         <Image source = {Camera} style = {styles.cameraIcon}/>
@@ -52,7 +78,7 @@ const Profile2 = ({navigation}) =>  {
     {/* avatar */}
     <View style = {styles.dpContainner}>
       <View style = {styles.dpBlueRound}>
-        <Image style = {styles.dp} source = {CoverPhoto} />
+        <Image style = {styles.dp} source = {{uri: userInfo.avatar}} />
         <TouchableNativeFeedback style = {{
                 height: 35,
                 width: 35,
@@ -69,8 +95,8 @@ const Profile2 = ({navigation}) =>  {
     </View>
 
     {/* userName */}
-    <Text style = {styles.userName}>Thế Tài</Text>
-    <Text style = {styles.shortBio}>Love to flirt</Text>
+    <Text style = {styles.userName}>{userInfo.username}</Text>
+    {/* <Text style = {styles.shortBio}>Love to flirt</Text> */}
 
     <View
         style={{
@@ -95,7 +121,7 @@ const Profile2 = ({navigation}) =>  {
           marginLeft: 5,
           fontSize: 18,
           fontWeight: 'bold'
-        }}>Hà Nội</Text>
+        }}>{userInfo.city}</Text>
       </View>
       <View style = {styles.tabFrom}>
         <Image style = {styles.positionIcon} source = {Position} />
@@ -109,7 +135,7 @@ const Profile2 = ({navigation}) =>  {
           marginLeft: 5,
           fontSize: 18,
           fontWeight: 'bold'
-        }}>Hà Nội</Text>
+        }}>{userInfo.city}</Text>
       </View>
       
       <View  style = {styles.editBio}>
@@ -241,7 +267,6 @@ const Profile2 = ({navigation}) =>  {
           width: '100%'
         }} />
       <View>
-        <FeedPost/>
       </View>
   </ScrollView>
 );

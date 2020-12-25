@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^5.12.8",
     "axios": "^0.21.0",
     "expo": "^39.0.5",
+    "expo-av": "~8.6.0",
     "expo-constants": "~9.2.0",
     "expo-device": "~2.3.0",
     "expo-document-picker": "~8.4.0",
@@ -27,6 +28,7 @@
     "expo-notifications": "^0.7.2",
     "expo-permissions": "~9.3.0",
     "expo-status-bar": "^1.0.3",
+    "expo-video-player": "^1.6.1",
     "expo-web-browser": "^8.6.0",
     "lodash": "^4.17.20",
     "mime": "^2.4.7",
@@ -55,6 +57,8 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-native-tab-view": "^2.15.2",
     "react-native-timeago": "^0.5.0",
+    "react-native-video": "^5.1.0-alpha8",
+    "react-native-video-player": "^0.10.1",
     "react-native-web": "^0.13.18",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
@@ -63,7 +67,8 @@
     "stream-chat-react": "^3.4.3",
     "styled-components": "^5.2.1",
     "use-immer": "^0.4.2",
-    "use-socket.io-client": "^1.1.0"
+    "use-socket.io-client": "^1.1.0",
+    "@react-native-community/slider": "3.0.3"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

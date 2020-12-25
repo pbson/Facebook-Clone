@@ -30,7 +30,7 @@ const Feed = ({ navigation }) => {
     const [userInfo, setUser] = useState({});
 
     const index = 0
-    const count = 20
+    const count = 100
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
         const url = `http://303ef6e81cb6.ngrok.io/it4788/user/get_user_info?token=${savedToken}`

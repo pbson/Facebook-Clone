@@ -33,14 +33,6 @@ const AccountSetting = ({ navigation }) => {
 
     return(
         <ScrollView  style={styles.container}>
-            <View style  = {styles.headerSearch} >
-                <TouchableOpacity>
-                <View style = {styles.searchBox} >
-                    <Text style = {styles.textSearch} >Search</Text>
-                </View>
-                </TouchableOpacity>
-            </View>
-
             <View style = {{borderBottomColor: '#E5E5E5', borderBottomWidth: 6.5}} >
                 <View style = {{padding: 10,}} >
                     <Text style = {{fontSize: 20, fontWeight: "bold"}} >Account setting</Text>

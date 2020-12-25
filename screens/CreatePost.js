@@ -49,7 +49,10 @@ const CreatePost = ({ navigation }) => {
 
         if (!result.cancelled) {
             if (result.type == 'video') {
-                setImagesCount(4)
+                setImagesCount(-1)
+                const newImageUri = "file:///" + result.uri.split("file:/").join("");
+
+                setImage([...images, { uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() }]);
             } else {
                 const newImageUri = "file:///" + result.uri.split("file:/").join("");
 
@@ -74,7 +77,11 @@ const CreatePost = ({ navigation }) => {
 
         if (!result.cancelled) {
             if (result.type == 'video') {
-                setImagesCount(4)
+                setImagesCount(-1)
+                const newImageUri = "file:///" + result.uri.split("file:/").join("");
+                console.log({ uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() })
+
+                setImage([...images, { uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() }]);
             } else {
                 const newImageUri = "file:///" + result.uri.split("file:/").join("");
 
@@ -85,16 +92,33 @@ const CreatePost = ({ navigation }) => {
     };
     /////////////////////////////////////////////////
     const sendPost = async () => {
-        setUploading(true)
-        CheckConnectivity();
+        console.log(images)
+        // setUploading(true)
+        // CheckConnectivity();
         let arr = []
-        if (images && images.length > 0) {
+        if (imagesCount!=-1 && images.length > 0) {
             for (let image of images) {
                 let formData = new FormData();
                 formData.append('file', image);
                 formData.append('upload_preset', 'pbson639')
                 formData.append('cloud_name', 'pbson639')
                 const response = await fetch("https://api.cloudinary.com/v1_1/pbson639/image/upload", {
+                    method: "post",
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    body: formData
+                })
+                const data = await response.json();
+                arr.push(data.secure_url)
+            };
+        }
+        if (imagesCount == -1 && images.length > 0) {
+            for (let image of images) {
+                let formData = new FormData();
+                formData.append('file', image);
+                formData.append('upload_preset', 'pbson639')
+                formData.append('cloud_name', 'pbson639')
+                const response = await fetch("https://api.cloudinary.com/v1_1/pbson639/video/upload", {
                     method: "post",
                     Accept: 'application/json',
                     'Content-Type': 'multipart/form-data',
@@ -233,10 +257,10 @@ const CreatePost = ({ navigation }) => {
 
                     <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={140} style={{ position: 'absolute', top: screenHeight / 1.44 }}>
                         <View style={styles.bottomTab}>
-                            <TouchableHighlight disabled={imagesCount >= 4} onPress={takeImage} >
+                            <TouchableHighlight disabled={imagesCount >= 4 || imagesCount<0} onPress={takeImage} >
                                 <Image style={styles.bottomSheetIcon} source={require('../assets/icons/cam.png')} />
                             </TouchableHighlight>
-                            <TouchableHighlight disabled={imagesCount >= 4} onPress={pickImage} >
+                            <TouchableHighlight disabled={imagesCount >= 4 || imagesCount<0} onPress={pickImage} >
                                 <Image style={styles.bottomSheetIcon} source={require('../assets/icons/pic.png')} />
                             </TouchableHighlight>
                             <TouchableHighlight onPress={dismis} >
