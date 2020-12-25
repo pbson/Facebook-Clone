@@ -42,14 +42,14 @@ const AccountName = ({navigation})=>{
         </TouchableOpacity>
         
     </KeyboardAvoidingView>
-    {nextB&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('UserBirth',{
+    {nextB&&<TouchableOpacity onPress={()=>{navigation.navigate('UserBirth',{
                 first_name: first_name,
                 last_name: last_name
-            })}}  />   
-        </View>}
-        <View 
-                
+            })}} style={styles.nextBtn}>
+            <Text style={{color: 'white'}}>Next</Text> 
+        </TouchableOpacity >}
+        <TouchableOpacity 
+                onPress={()=>navigation.navigate('Login')}
                 style={{
                     justifyContent: 'center',width: '100%',height: '7%',
                     alignItems: 'center',alignSelf: 'flex-end',
@@ -57,7 +57,7 @@ const AccountName = ({navigation})=>{
                     borderTopWidth: 1
                     }}>
                         <Text style={{color: '#1E90FF'}}>Already have an account?</Text>
-        </View>
+        </TouchableOpacity>
     </View>
     
     )
@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 8,
         alignItems: 'center',
-        color: 'white'
+        
     }
 })

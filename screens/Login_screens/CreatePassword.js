@@ -122,10 +122,10 @@ const signupUser = async () => {
                 </View>
                 
         </TouchableOpacity>
-        {isDone&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{signupUser()}}  />   
-            </View>}
-        <View 
+        {isDone&&<TouchableOpacity onPress={()=>signupUser()} style={styles.nextBtn}>
+            <Text style={{color: 'white'}}>Next</Text> 
+        </TouchableOpacity >}
+        <TouchableOpacity 
                 onPress={()=>navigation.navigate('Login')}
                 style={{
                     justifyContent: 'center',width: '100%',height: '7%',
@@ -133,7 +133,7 @@ const signupUser = async () => {
                     borderTopWidth: 1
                     }}>
                         <Text style={{color: '#1E90FF'}}>Already have an account?</Text>
-                </View>
+                </TouchableOpacity>
         </View>
     )
 }

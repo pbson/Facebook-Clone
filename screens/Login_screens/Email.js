@@ -51,9 +51,9 @@ useEffect(()=>{
                     <Button title={'Use your phone number'} color={'#808080'} onPress={()=>{navigation.navigate('UserPhoneNumber')}}/>
                 </View>
         </TouchableOpacity>
-        {emailNext&&<View style={styles.nextBtn}>
+        {emailNext&&<TouchableOpacity  style={styles.nextBtn}>
             <Button title={'Next'} color={'white'} onPress={()=>{console.log(route.params)}}  />   
-            </View>}
+            </TouchableOpacity >}
         <View 
                 onPress={()=>navigation.navigate('Login')}
                 style={{

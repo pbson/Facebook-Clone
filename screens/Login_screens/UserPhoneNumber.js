@@ -35,28 +35,18 @@ useEffect(()=>{
                 <View style={{width: '90%',paddingTop: '4%',paddingBottom: '4%'}}>
                     <Text style={{textAlign: 'center',color: '#808080'}}>You'll use this phone number when you log in and if you ever need to reset your passwrod.</Text>
                 </View>
-                <View style={{  width: '90%',
-                                height: '7%',
-                                borderColor: '#808080',
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                justifyContent: 'center',
-                                paddingLeft: '3%',
-                                backgroundColor: 'white'}} >
-                    <Button title={'Use your email address'} color={'#808080'} onPress={()=>{navigation.navigate('Email')}}/>
-                </View>
+                
                 
         </TouchableOpacity>
-        {isNextEmail&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('CreatePassword',{
+        {isNextEmail&&<TouchableOpacity onPress={()=>{navigation.navigate('CreatePassword',{
                 first_name: route.params.first_name,
                 last_name: route.params.last_name,
                 date: route.params.date,
                 gender:route.params.gender,
-                phone: phone
-            })}}  />   
-            </View>}
-        <View 
+                phone: phone})}} style={styles.nextBtn}>
+                    <Text style={{color: 'white'}}>Next</Text> 
+            </TouchableOpacity>}
+        <TouchableOpacity 
                 onPress={()=>navigation.navigate('Login')}
                 style={{
                     justifyContent: 'center',width: '100%',height: '7%',
@@ -64,7 +54,7 @@ useEffect(()=>{
                     borderTopWidth: 1
                     }}>
                         <Text style={{color: '#1E90FF'}}>Already have an account?</Text>
-                </View>
+                </TouchableOpacity>
         </View>
     )
 }
