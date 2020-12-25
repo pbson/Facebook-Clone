@@ -4,8 +4,8 @@ import {
     View,
     StyleSheet,
     TextInput,
-    FlatList,
     Text,
+    FlatList,
     RefreshControl
 } from "react-native";
 import {
@@ -20,18 +20,18 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });
 }
-const Watch = ({ navigation }) => {
+
+const Feed = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [userInfo, setUser] = useState({});
 
     const index = 0
-    const count = 20
+    const count = 100
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
         const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
@@ -61,7 +61,14 @@ const Watch = ({ navigation }) => {
             }
         })
         const json = await response.json();
-        setData(json.data.post);
+        let videoPost = json.data.post.filter(
+            post => {
+                return post.image.length == 1 &&  post.image[0].split('.').pop() == 'mp4'
+            }
+        )
+        console.log(videoPost)
+        setData(videoPost);
+
     }
     useEffect(() => {
         getUserInfo()
@@ -77,18 +84,18 @@ const Watch = ({ navigation }) => {
         fetchResult()
     });
     return (
-        <ScrollView
-            contentContainerStyle={{ alignItems: "center" }}
-            style={styles.container}
-        >
-            <View style={styles.headerContainer}>
-                <Text style={styles.headingText}>Watch</Text>
-            </View>
-            <FlatList
-                style={styles.chatContainer}
-            />
-            <View>
-            <FlatList
+        <View style={styles.container}>
+            <ScrollView
+                contentContainerStyle={{ alignItems: "center" }}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headingText}>Watch</Text>
+                </View>
+                <View style={styles.break}></View>
+                <FlatList
                     inverted
                     style={styles.chatContainer}
                     data={data}
@@ -112,13 +119,13 @@ const Watch = ({ navigation }) => {
                         />
                     )}
                 />
-            </View>
+            </ScrollView>
+        </View>
 
-        </ScrollView>
     );
 };
 
-export default Watch;
+export default Feed;
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -127,14 +134,34 @@ const styles = StyleSheet.create({
         borderBottomColor: '#E5E5E5',
         borderBottomWidth: 0.5
     },
+    headingText:{
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
     container: {
         flex: 1,
         backgroundColor: "white",
         paddingTop: 10,
     },
-    headingText: {
-        fontSize: responsiveFontSize(2.5),
-        fontWeight: 'bold'
+    searchContainer: {
+        marginTop: 10,
+        width: responsiveWidth(80),
+        height: responsiveHeight(5),
+        backgroundColor: 'white',
+        borderRadius: 30,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: 10,
+        borderColor: '#E5E5E5',
+        borderWidth: 1,
+        color: 'black',
+        marginBottom: 10
+    },
+    search: {
+        flex: 1,
+        paddingLeft: 20,
+        color: 'black',
     },
     searchIconContainer: {
         paddingHorizontal: 10,
@@ -143,9 +170,6 @@ const styles = StyleSheet.create({
         height: responsiveHeight(13),
         width: responsiveWidth(100),
         marginVertical: 5,
-    },
-    chatContainer: {
-        width: responsiveWidth(100)
     },
     name: {
         flex: 1,

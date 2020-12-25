@@ -9,7 +9,7 @@ import {
 	Image
 } from "react-native";
 import styled from 'styled-components/native'
-
+// import Video from 'react-native-video';
 import {
 	Entypo,
 	AntDesign,
@@ -20,6 +20,8 @@ import Avatar from './Avatar'
 import MasonryList from "react-native-masonry-list";
 import Comment from '../screens/Comment'
 import { SliderBox } from "react-native-image-slider-box";
+import { Video } from 'expo-av'
+import VideoPlayer from 'expo-video-player'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -29,12 +31,17 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 	const [likes, setLike] = useState(like);
 	const [likeText, setLikeText] = useState(`${like}`);
 	const [isLiked, setIsLike] = useState(is_liked);
+	const [isVideo, setVideo] = useState();
 
 	useEffect(() => {
 		if (image) {
 			setImage(image.length > 0)
 		}
 		setIsLike(is_liked);
+		if (image.length == 1 && image[0].split('.').pop() == 'mp4') {
+			setVideo(true);
+		}
+		console.log(image)
 	}, [])
 
 	const openCommentView = () => {
@@ -103,13 +110,27 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 			<Text style={styles.Post}>
 				{described}
 			</Text>
-			{ images ?
+			{ (images && !isVideo) ?
 				<View style={styles.imageList}>
 					<SliderBox
 						images={image}
 					/>
 				</View>
-				: null
+				: (images && isVideo) ?
+				<View style={styles.imageList}>
+					<VideoPlayer
+						videoProps={{
+							shouldPlay: true,
+							source: {
+								uri: image[0]
+							}
+						}}
+						inFullscreen={true}
+						height={270}
+						showControlsOnLoad={true}
+						videoBackground='transparent'
+					/>
+				</View> : null
 			}
 			<View style={styles.Footer}>
 				<View style={styles.FooterCount}>
@@ -138,7 +159,7 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 										size={20}
 										color='#0078ff'
 									/>
-								</View> : 
+								</View> :
 								<View style={styles.Icon}>
 									<AntDesign
 										name='like2'
