@@ -59,25 +59,6 @@ const Watch = ({ navigation }) => {
         await AsyncStorage.removeItem('savedToken')
         navigation.navigate('Login');
     }
-<<<<<<< Updated upstream
-
-    useEffect(() => {
-        const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
-        const fetchResult = async () => {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            setData(json.data);
-        }
-        fetchResult()
-    }, []);
-=======
->>>>>>> Stashed changes
     return (
         <ScrollView
             contentContainerStyle={{  }}

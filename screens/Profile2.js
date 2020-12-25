@@ -34,9 +34,6 @@ import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-
 import FeedPost from '../components/FeedPost'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-<<<<<<< Updated upstream
-const Profile2 = ({navigation}) =>  {
-=======
 const Profile2 = (props) =>  {
   const [userInfo, setUser] = useState({});
 
@@ -63,7 +60,6 @@ useEffect(() => {
     getUserInfo()
 }, []);
 
->>>>>>> Stashed changes
   return( 
   <ScrollView style= {styles.container} >
     {/* coverPhoto */}
