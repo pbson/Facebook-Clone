@@ -60,7 +60,6 @@ const Feed = ({ navigation }) => {
             }
         })
         const json = await response.json();
-        console.log(json.data.post)
         setData(json.data.post);
     }
     useEffect(() => {

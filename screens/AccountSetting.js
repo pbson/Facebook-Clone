@@ -17,7 +17,7 @@ import {
 import ProfileIcon  from '../assets/Profile.png'
 import FacebookDecor from '../assets/facebookDecor.png'
 import SecurityIcon  from '../assets/security.png'
-
+import * as WebBrowser from 'expo-web-browser';
 
 const AccountSetting = ({ navigation }) => {
 
@@ -26,6 +26,9 @@ const AccountSetting = ({ navigation }) => {
     }
     const onPress2 = () =>{
         navigation.navigate('passwordSetting');
+    }
+    const openWebpage = async (url) =>{
+        await WebBrowser.openBrowserAsync(url);
     }
 
     return(
@@ -75,17 +78,17 @@ const AccountSetting = ({ navigation }) => {
             <View style = {styles.footer} >
                 <Image style = {styles.facebookDecor} source = {FacebookDecor} />
                 <Text style = {{fontSize: 20, fontWeight: "bold", marginLeft: 10}} >Legal and Policies</Text>
-                <TouchableOpacity>
-                    <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >terms of service</Text>
+                <TouchableOpacity onPress={()=> openWebpage('https://www.facebook.com/terms.php')}>
+                    <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >Terms of service</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >data policy </Text>
+                <TouchableOpacity onPress={()=> openWebpage('https://www.facebook.com/policy.php')}>
+                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >Data policy </Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >cookie policy</Text>
+                <TouchableOpacity  onPress={()=> openWebpage('https://www.facebook.com/policies/cookies')}>
+                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >Cookie policy</Text>
                </TouchableOpacity>
-               <TouchableOpacity>
-                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >community standards </Text>
+               <TouchableOpacity  onPress={()=> openWebpage('https://www.facebook.com/communitystandards/')}>
+                   <Text style = {{fontSize: 15, marginLeft: 10, marginTop: 10}} >Community standards </Text>
                </TouchableOpacity>
             </View>
 

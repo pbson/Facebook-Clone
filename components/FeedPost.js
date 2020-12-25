@@ -56,7 +56,6 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 			}
 		})
 		const json = await response.json();
-		console.log(json);
 		if (json.data.isliked === true && json.data.like == 1) {
 			setLike(json.data.like)
 			setLikeText(`You liked this post`)

@@ -21,6 +21,7 @@ import CoverPhoto from '../assets/coverPhoto.png';
 import SettingIcon from '../assets/setting2.png';
 import LogoutIcon from '../assets/logOutIcon.png';
 import { StyleSheetManager } from "styled-components";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Watch = ({ navigation }) => {
@@ -34,6 +35,11 @@ const Watch = ({ navigation }) => {
     }
     const onPress2 = () =>{
         navigation.navigate('profile');
+    }
+
+    const logout = async () =>{
+        await AsyncStorage.removeItem('savedToken')
+        navigation.navigate('Login');
     }
 
     useEffect(() => {
@@ -73,7 +79,7 @@ const Watch = ({ navigation }) => {
                     <Image style = {styles.settingIcon} source = {SettingIcon} />
                     <Text style = {{fontSize: 17, fontWeight: "bold", marginLeft: 10}} >Setting</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {styles.row2}  >
+                <TouchableOpacity onPress={()=>logout()} style = {styles.row2}  >
                     <Image style = {styles.logoutIcon} source = {LogoutIcon}></Image>
                     <Text style = {{fontSize: 17, fontWeight: "bold", marginLeft: 10}} >Log Out</Text>
                 </TouchableOpacity>

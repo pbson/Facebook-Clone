@@ -15,6 +15,7 @@ const Welcome = ({ navigation }) => {
     useEffect(() => {
         const checkTokenValid = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
+            console.log(savedToken);
             if (savedToken === null) {
                 setTimeout(() => {
                     navigation.navigate('Login')
@@ -30,9 +31,7 @@ const Welcome = ({ navigation }) => {
                     }
                 })
                 const json = await response.json();
-                console.log(json)
                 if (json.code !== '1000' ){
-                    console.log(json)
                     navigation.navigate('Login')
                 }else{
                     navigation.navigate('HomeTab')

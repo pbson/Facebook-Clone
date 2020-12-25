@@ -24,29 +24,40 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
-    const [hasUnsavedChanges, setUnsavedChanges] = useState(true);
 
     const registerForPushNotificationsAsync = async () => {
-        const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
         if (status != 'granted') {
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-          // finalStatus = status;
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            // finalStatus = status;
         }
         if (status !== 'granted') {
-          alert('Failed to get push token for push notification!');
-          return;
+            alert('Failed to get push token for push notification!');
+            return;
         }
         let token = (await Notifications.getExpoPushTokenAsync()).data;
         return token
     };
+    const setDevtoken = async(devtoken, savedToken) => {
+        const url = `http://192.168.0.140:3000/it4788/user/set_devtoken?token=${savedToken}&devtoken=${devtoken}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        console.log(json)
+    }
 
-    useEffect(
-        () =>
-          navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
-          }),
-        [navigation, hasUnsavedChanges]
-      );
+    // useEffect(
+    //     () =>
+    //         navigation.addListener('beforeRemove', (e) => {
+    //             e.preventDefault();
+    //         }),
+    //     [navigation]
+    // );
 
     const signInUser = async () => {
         let savedToken = await registerForPushNotificationsAsync();
@@ -61,19 +72,19 @@ const Login = ({ navigation }) => {
             })
             const json = await response.json();
             setData(json);
-            if (json.code !== '1000' ){
+            if (json.code !== '1000') {
                 Alert.alert(
                     "Login fail",
                     json.message,
                     [
-                      { text: "OK", onPress: () => console.log("OK Pressed") }
+                        { text: "OK", onPress: () => console.log("OK Pressed") }
                     ],
                     { cancelable: false }
                 );
-            }else{
+            } else {
                 await AsyncStorage.setItem('savedToken', json.data.token)
-                setUnsavedChanges(false)
-                navigation.navigate(HomeTab,{
+                // setDevtoken(savedToken, json.data.token)
+                navigation.navigate('HomeTab', {
                     userId: json.data.id,
                     userPhonenumber: json.data.phoneNumber,
                     userAvatar: json.data.avatar
@@ -87,7 +98,7 @@ const Login = ({ navigation }) => {
                 "Login fail",
                 "Network is fuck up",
                 [
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
                 ],
                 { cancelable: false }
             );
@@ -106,14 +117,14 @@ const Login = ({ navigation }) => {
             <View style={styles.formInputContainer}>
                 <TextInput
                     style={[styles.formInput, isPhonenumberHighlighted && styles.isHighlighted]}
-                    onChangeText  = {(username)=> setUsername(username)}
+                    onChangeText={(username) => setUsername(username)}
                     onFocus={() => { setPhonenumberIsHighlighted(true) }}
                     onBlur={() => { setPhonenumberIsHighlighted(false) }}
                     placeholder="Phone number or Email"
                 />
                 <TextInput
                     style={[styles.formInput, isPasswordHighlighted && styles.isHighlighted]}
-                    onChangeText  = {(password)=> setPassword(password)}
+                    onChangeText={(password) => setPassword(password)}
                     onFocus={() => { setPasswordIsHighlighted(true) }}
                     onBlur={() => { setPasswordIsHighlighted(false) }}
                     placeholder="Password"

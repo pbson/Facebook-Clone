@@ -15,6 +15,7 @@ import {
 import AddFriendList from '../components/AddFriendList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { createIconSetFromFontello } from "@expo/vector-icons";
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -39,12 +40,12 @@ const Friends = ({ navigation }) => {
         })
         const json = await response.json();
         setSuggestedFriends(json.data);
+        console.log(json.data);
     }
 
     const fetchResquestedFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
         const url = `http://192.168.0.140:3000/it4788/user/get_requested_friends?token=${savedToken}&index=${index}&count=${count}`
-        console.log(url)
         const response = await fetch(url, {
             method: 'POST',
             headers: {

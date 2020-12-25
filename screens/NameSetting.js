@@ -4,27 +4,51 @@ import {
     View,
     StyleSheet,
     Text,
-    FlatList,
     TouchableOpacity,
     Image,
     TextInput,
-    Button
+    Alert,
 } from "react-native";
 import {
-    responsiveFontSize,
     responsiveHeight,
-    responsiveScreenWidth,
-    responsiveWidth,
 } from "react-native-responsive-dimensions";
 import NextIcon from '../assets/NextIcon.png'
 import BackIcon from '../assets/NextIconBack.png'
 import Note from '../assets/notice.png'
 import { block } from "react-native-reanimated";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NameSetting = ({ navigation }) => {
 
     const [userName, setUserName] = useState('');
+    const changeUsername = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/set_user_info?token=${savedToken}&username=${userName}`
+        console.log(url)
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        console.log(json)
+        if (json.code !== '1000') {
+            Alert.alert(
+                "Change username failed",
+                json.message,
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            Alert.alert(
+                "Change username successfully",
+            );
+        }
+    }
 
     return(
         <ScrollView  style={styles.container}>
@@ -45,7 +69,7 @@ const NameSetting = ({ navigation }) => {
                 </View>
                 <View style = {{alignItems: "center", justifyContent: "center", marginTop: 15}} >
                     <Image style = {styles.note} source = {Note} />
-                    <TouchableOpacity style = {styles.confirm}>
+                    <TouchableOpacity onPress = {()=> changeUsername()} style = {styles.confirm}>
                     <View  >
                         <Text style = {{color: 'white', fontSize: 16}} >Confirm</Text>
                     </View>
