@@ -39,14 +39,7 @@ const Navigator = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>     
-            <Stack.Screen name = 'setting' component = {setting}/>
-            <Stack.Screen name = 'accountSetting' component = {accountSetting}/>
-            <Stack.Screen name = 'personalinfoSetting' component = {personalinfoSetting} />
-            <Stack.Screen name = 'nameSetting' component = {nameSetting} />
-            <Stack.Screen name = 'profile' component = {profile} />
-            <Stack.Screen name = 'passwordSetting' component = {passwordSetting} />
-            <Stack.Screen name = 'passChange' component = {passChange} />           
+            <Stack.Navigator>       
             <Stack.Screen
                     options={
                         ({ navigation }) => ({
@@ -170,6 +163,13 @@ const Navigator = () => {
                         })
                     }
                 />
+            <Stack.Screen name = 'setting' component = {setting}/>
+            <Stack.Screen name = 'accountSetting' component = {accountSetting}/>
+            <Stack.Screen name = 'personalinfoSetting' component = {personalinfoSetting} />
+            <Stack.Screen name = 'nameSetting' component = {nameSetting} />
+            <Stack.Screen name = 'profile' component = {profile} />
+            <Stack.Screen name = 'passwordSetting' component = {passwordSetting} />
+            <Stack.Screen name = 'passChange' component = {passChange} />         
             </Stack.Navigator>
         </NavigationContainer>
     )

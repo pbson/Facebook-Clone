@@ -4,11 +4,10 @@ import {
     View,
     StyleSheet,
     Text,
-    FlatList,
     TouchableOpacity,
     Image,
     TextInput,
-    Button
+    Alert
 } from "react-native";
 import {
     responsiveFontSize,
@@ -21,6 +20,7 @@ import BackIcon from '../assets/NextIconBack.png'
 import Note from '../assets/notice.png'
 import CurrentPass from '../assets/currentPassword.png';
 import Key from '../assets/key.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { block } from "react-native-reanimated";
 
@@ -30,44 +30,88 @@ const PasswordChange = ({ navigation }) => {
     const [currentPass, setCurrentPass] = useState('');
     const [NewPassword, setNewPassword] = useState('');
     const [ReTypeNewPassword, setReTypeNewPassword] = useState('');
-    
 
-    return(
-        <ScrollView  style={styles.container}>
+    // useEffect(() => {
+    //     clearInput()
+    // },[])
 
-            <View style = {styles.body} >
-                <View style = {{flexDirection: "row", alignItems: "center", marginTop: 10}}>
-                    <Image style = {{width: 25, height: 25, marginLeft: 7}} source = {CurrentPass} />
-                    <TextInput style={{ height: 30, width: '60%' , borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
-                     onChangeText={currentPass => setCurrentPass(currentPass)}
-                     placeholder="Current password" />
+    const clearInput = () => {
+        setCurrentPass('')
+        setNewPassword('')
+        setReTypeNewPassword('')
+    }
+
+    const changePassword = async () => {
+
+        if (NewPassword !== ReTypeNewPassword) {
+            Alert.alert(
+                "Retype password doesn't match"
+            );
+        }
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/change_password?token=${savedToken}&old_password=${currentPass}&new_password=${NewPassword}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        console.log(json)
+        if (json.code !== '1000') {
+            Alert.alert(
+                "Change password failed",
+                json.message,
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            Alert.alert(
+                "Change password successfully",
+            );
+        }
+    }
+
+
+    return (
+        <ScrollView style={styles.container}>
+
+            <View style={styles.body} >
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+                    <Image style={{ width: 25, height: 25, marginLeft: 7 }} source={CurrentPass} />
+                    <TextInput style={{ height: 30, width: '60%', borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
+                        onChangeText={currentPass => setCurrentPass(currentPass)}
+                        placeholder='Enter your password' />
                 </View>
 
-                <View style = {{flexDirection: "row", alignItems: "center", marginTop: 10}}>
-                    <Image style = {{width: 20, height: 20, marginLeft: 12}} source = {Key} />
-                    <TextInput style={{ height: 30, width: '60%' , borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
-                     onChangeText={NewPassword => setReTypeNewPassword(NewPassword)}
-                     placeholder="New password" />
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+                    <Image style={{ width: 20, height: 20, marginLeft: 12 }} source={Key} />
+                    <TextInput style={{ height: 30, width: '60%', borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
+                        onChangeText={NewPassword => setNewPassword(NewPassword)}
+                        placeholder='Enter new password' />
                 </View>
 
-                <View style = {{flexDirection: "row", alignItems: "center", marginTop: 10}}>
-                    <Image style = {{width: 20, height: 20, marginLeft: 12}} source = {Key} />
-                    <TextInput style={{ height: 30, width: '60%' , borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
-                     onChangeText={ReTypeNewPassword => setUserName(ReTypeNewPassword)}
-                     placeholder="Re-type new password" />
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+                    <Image style={{ width: 20, height: 20, marginLeft: 12 }} source={Key} />
+                    <TextInput style={{ height: 30, width: '60%', borderColor: 'gray', borderWidth: 1, marginLeft: 7, marginTop: 4 }}
+                        onChangeText={ReTypeNewPassword => setReTypeNewPassword(ReTypeNewPassword)}
+                        placeholder='Retype new password' />
                 </View>
 
-                <View style = {{alignItems: "center", justifyContent: "center"}} >
-                    <TouchableOpacity style = {styles.confirm}>
-                    <View  >
-                        <Text style = {{color: 'white', fontSize: 16}} >Update Password</Text>
-                    </View>
+                <View style={{ alignItems: "center", justifyContent: "center" }} >
+                    <TouchableOpacity delayPressIn={0} onPress={() => changePassword()} style={styles.confirm}>
+                        <View  >
+                            <Text style={{ color: 'white', fontSize: 16 }} >Update Password</Text>
+                        </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style = {styles.cancel}>
-                    <View  >
-                        <Text style = {{ fontSize: 16}} >Cancel</Text>
-                    </View>
+                    <TouchableOpacity delayPressIn={0} onPress={() => clearInput()} style={styles.cancel}>
+                        <View  >
+                            <Text style={{ fontSize: 16 }} >Cancel</Text>
+                        </View>
                     </TouchableOpacity>
 
                 </View>
@@ -95,11 +139,11 @@ const styles = StyleSheet.create({
     nameTitle: {
         margin: 7,
         fontSize: 18,
-        fontWeight: "700",
+        // fontWeight: 700,
         marginTop: 10
     },
     back: {
-        height: 28, 
+        height: 28,
         width: 28,
         marginTop: 30,
         marginLeft: 7

@@ -14,7 +14,9 @@ import {View,
     } from 'react-native'
 import { set } from 'react-native-reanimated'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
-
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CreatePassword = ({route,navigation})=>{
 const [pass, setPass]=useState('')
@@ -28,6 +30,85 @@ useEffect(()=>{
     if(pass=='') setIsDone(false)
     else setIsDone(true)
 })
+
+const registerForPushNotificationsAsync = async () => {
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if (status != 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        // finalStatus = status;
+    }
+    if (status !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+    }
+    let token = (await Notifications.getExpoPushTokenAsync()).data;
+    return token
+};
+
+const setUserInfo = async () => {
+    let city = 'Hanoi';
+    let gender = route.params.gender;
+    let avatar = 'https://res.cloudinary.com/pbson639/image/upload/v1608369177/Trend-Avatar-Facebook_1_thn6mc.jpg'
+    let cover_image = "https://res.cloudinary.com/pbson639/image/upload/v1608905713/placeholder_dd64bj.png"
+    let username = `${route.params.first_name} ${route.params.last_name}`
+
+    let savedToken = await AsyncStorage.getItem('savedToken');
+    const url = `http://192.168.0.140:3000/it4788/user/set_user_info?token=${savedToken}&username=${username}&city=${city}&gender=${gender}&avatar=${avatar}&cover_image=${cover_image}`
+    console.log(url)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+    const json = await response.json();
+    console.log(json);
+}
+
+const signupUser = async () => {
+    let savedToken = await registerForPushNotificationsAsync();
+    let url = `http://192.168.0.140:3000/it4788/user/signup?phonenumber=${route.params.phone}&password=${pass}&uuid=${savedToken}`
+    console.log(url);
+    const fetchResult = async () => {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if (json.code !== '1000') {
+            Alert.alert(
+                "Signup fail",
+                json.message,
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            console.log(json)
+            await AsyncStorage.setItem('savedToken', json.token)
+            setUserInfo()
+            navigation.navigate('Login');
+        }
+    }
+    try {
+        fetchResult()
+    } catch (error) {
+        Alert.alert(
+            "Login fail",
+            "Network is error",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+    }
+}
+
     return(
         <View style={styles.container} >
         <TouchableOpacity  style={styles.container} onPress={Keyboard.dismiss}>
@@ -40,10 +121,9 @@ useEffect(()=>{
                     <Text style={{textAlign: 'center',color: '#808080'}}>Enter a combination of at least six numbers, letters and punctuation marks.</Text>
                 </View>
                 
-                
         </TouchableOpacity>
         {isDone&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('HomeTab')}}  />   
+            <Button title={'Next'} color={'white'} onPress={()=>{signupUser()}}  />   
             </View>}
         <View 
                 onPress={()=>navigation.navigate('Login')}

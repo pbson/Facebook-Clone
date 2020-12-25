@@ -3,45 +3,79 @@ import {
     ScrollView,
     View,
     StyleSheet,
-    Text,
+    TextInput,
     FlatList,
-    TouchableOpacity,
-    Image
+    Text,
+    RefreshControl
 } from "react-native";
 import {
     responsiveFontSize,
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
-import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost"
+import Avatar from "../components/Avatar"
+import CreatePost from "../screens/CreatePost.js"
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import { LogBox } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 const Watch = ({ navigation }) => {
     const [data, setData] = useState([]);
+    const [userInfo, setUser] = useState({});
 
     const index = 0
     const count = 20
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
-
-
-    useEffect(() => {
-        const url = `http://94e260158450.ngrok.io/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
-        const fetchResult = async () => {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            setData(json.data);
+    const getUserInfo = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if (json.code !== '1000') {
+            navigation.navigate('Login')
+        } else {
+            setUser(json.data);
         }
+    }
+
+    const fetchResult = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setData(json.data.post);
+    }
+    useEffect(() => {
+        getUserInfo()
         fetchResult()
     }, []);
+    ///////////////////////////////// Pull down to refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        getUserInfo()
+        fetchResult()
+    });
     return (
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
@@ -54,8 +88,30 @@ const Watch = ({ navigation }) => {
                 style={styles.chatContainer}
             />
             <View>
-                <FeedPost/>
-                <FeedPost/>
+            <FlatList
+                    inverted
+                    style={styles.chatContainer}
+                    data={data}
+                    keyExtractor={({ id }, index) => id}
+                    renderItem={({ item }) => (
+                        <FeedPost
+                            navigation={navigation}
+                            avatar={item.author.avatar}
+                            id={item.id}
+                            described={item.described}
+                            username={item.author.name}
+                            created={item.created}
+                            modified={item.modified}
+                            like={item.like}
+                            comment={item.comment}
+                            image={item.image}
+                            is_liked={item.is_liked}
+                            can_edit={item.can_edit}
+                            can_comment={item.can_comment}
+                            video={item.video}
+                        />
+                    )}
+                />
             </View>
 
         </ScrollView>

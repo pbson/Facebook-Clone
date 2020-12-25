@@ -8,6 +8,7 @@ import {
     Alert
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Avatar from '../components/Avatar'
 
 const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isRequest }) => {
 
@@ -59,6 +60,8 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
                     'Content-Type': 'application/json',
                 }
             })
+            setFriend('Request has been sent')
+            setButton(false)
             const json = await response.json();
         }
     }
@@ -96,14 +99,7 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
         <View style={styles.container}>
             {showContainer ?
                 <View style={styles.friendlistContainer}>
-                    <View>
-                        <View>
-                            <Image
-                                style={styles.friendImg}
-                                source={{uri: addFriendImg}}
-                            />
-                        </View>
-                    </View>
+                    <Avatar url={addFriendImg}/>
                     <View style={styles.addFriendList}>
                         <Text style={styles.addFriendName}>
                             {addFriendName}

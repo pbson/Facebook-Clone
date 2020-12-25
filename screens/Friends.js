@@ -15,6 +15,7 @@ import {
 import AddFriendList from '../components/AddFriendList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { createIconSetFromFontello } from "@expo/vector-icons";
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -39,6 +40,7 @@ const Friends = ({ navigation }) => {
         })
         const json = await response.json();
         setSuggestedFriends(json.data);
+        console.log(json.data);
     }
 
     const fetchResquestedFriends = async () => {
