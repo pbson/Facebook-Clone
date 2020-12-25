@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost"
+import ProFile2 from './Profile2.js'
 
 
 const Watch = ({ navigation }) => {
@@ -28,7 +29,7 @@ const Watch = ({ navigation }) => {
 
 
     useEffect(() => {
-        const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const url = `http://94e260158450.ngrok.io/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -53,6 +54,7 @@ const Watch = ({ navigation }) => {
             <FlatList
                 style={styles.chatContainer}
             />
+            <ProFile2 />
         </ScrollView>
     );
 };
