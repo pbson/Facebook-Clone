@@ -19,6 +19,7 @@ import {
 import Avatar from './Avatar'
 import MasonryList from "react-native-masonry-list";
 import Comment from '../screens/Comment'
+import { SliderBox } from "react-native-image-slider-box";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
