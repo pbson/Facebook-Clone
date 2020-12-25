@@ -14,6 +14,7 @@ import Profile2 from '../screens/Profile2';
 import Settings from '../screens/Settings';
 import EditProfile from '../screens/editProfile/EditProfile.js'
 import EditInfo from '../screens/editProfile/EditInfo.js'
+import CreatePost from '../screens/CreatePost.js'
 const ProfileNav = ()=>{
     const Stack = createStackNavigator()
     return(
@@ -22,6 +23,7 @@ const ProfileNav = ()=>{
             <Stack.Screen
                     name='Profile'
                     component={Profile2}
+                    options={{headerShown: false}}
             />
             <Stack.Screen
                     options={
@@ -33,15 +35,9 @@ const ProfileNav = ()=>{
                     name='EditProfile'
                     component={EditProfile}
             />
-            <Stack.Screen
-                    options={
-                        ({ navigation }) => ({
-                            headerShown: true,
-                            title: 'About'
-                        })
-                    }
-                    name='About'
-                    component={EditInfo}
+            <Stack.Screen 
+                name="CreatePost"
+                component={CreatePost}
             />
             </Stack.Navigator>
         

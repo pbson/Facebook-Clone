@@ -30,7 +30,7 @@ const Friends = ({ navigation }) => {
     const count = 30
     const fetchSuggestedFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_list_suggested_friends?token=${savedToken}&index=${index}&count=${count}`
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/get_list_suggested_friends?token=${savedToken}&index=${index}&count=${count}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -45,7 +45,7 @@ const Friends = ({ navigation }) => {
 
     const fetchResquestedFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_requested_friends?token=${savedToken}&index=${index}&count=${count}`
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/get_requested_friends?token=${savedToken}&index=${index}&count=${count}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {

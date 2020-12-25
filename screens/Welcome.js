@@ -21,7 +21,7 @@ const Welcome = ({ navigation }) => {
                     navigation.navigate('Login')
                 }, 2000);
             }
-            const url = `http://94e260158450.ngrok.io/it4788/user/get_list_suggested_friends?token=${savedToken}&index=0&count=0`
+            const url = `http://303ef6e81cb6.ngrok.io/it4788/user/get_list_suggested_friends?token=${savedToken}&index=0&count=0`
             const fetchResult = async () => {
                 const response = await fetch(url, {
                     method: 'POST',

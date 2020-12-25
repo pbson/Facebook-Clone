@@ -30,7 +30,7 @@ import Camera from '../assets/cam2.png';
 
 import settingProfile from '../navigations/ProfileNavigator';
 import { Navigation } from 'react-native-navigation';
-import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput, TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import FeedPost from '../components/FeedPost'
 
 const Profile2 = ({navigation}) =>  {
@@ -111,14 +111,7 @@ const Profile2 = ({navigation}) =>  {
           fontWeight: 'bold'
         }}>Hà Nội</Text>
       </View>
-      <View style = {styles.tabFrom}>
-        <Image style = {styles.tabOption} source = {Option} />
-        <Text style = {{
-          marginTop: 3,
-          marginLeft: 14,
-          fontSize: 18
-        }} >See your bio</Text>
-      </View>
+      
       <View  style = {styles.editBio}>
         <Button onPress={()=>navigation.navigate('EditProfile')} title="Edit Profile" color={'blue'} fontSize={15} fontWeight={'bold'} />
       </View>
@@ -212,23 +205,18 @@ const Profile2 = ({navigation}) =>  {
           width: '25%',
           height: '77%',
           }}>
-          <View style = {styles.postOption}>
-            <Image style = {styles.option} source = {EditPost} />
-          </View>
-          <View style = {styles.postSetting}>
-            <Image style = {styles.option} source = {setting} />
-          </View>
         </View>
       </View>
 
       {/* post */}
       <View style = {styles.whatyoupost} >
         <Image style = {styles.postAvatar} source = {CoverPhoto} />
-        <Text style = {{
+        <TextInput onFocus={() => navigation.navigate('CreatePost')} style = {{
           color: 'gray',
           marginLeft: '3%',
           fontSize: 17
-        }} >Bạn đang nghĩ gì?</Text>
+        }} placeholder="What's on your mind " 
+        />
       </View>
 
       <View

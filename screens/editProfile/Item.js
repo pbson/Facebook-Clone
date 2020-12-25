@@ -23,14 +23,13 @@ const Item = (props) => {
         console.log(props.img)
     })
     return (
-        <TouchableOpacity style={styles.item} onPress={()=>console.log('pressed')}>
+        <View style={styles.item} >
             <View style={{
-                backgroundColor: '#00FFFF',
                 width: '10%',
                 height: undefined,
                 aspectRatio: 1,
                 borderRadius: 20,
-                marginRight: '5%',
+                marginRight: '2%',
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
@@ -40,7 +39,7 @@ const Item = (props) => {
                     aspectRatio: 1,
                 }} source={icon} /></View>
             <Text color={textcolor}>{title}</Text>
-        </TouchableOpacity>
+        </View>
     )
 }
 export default Item
@@ -48,8 +47,8 @@ styles = StyleSheet.create({
     item: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginLeft: "5%",
+        marginLeft: "3%",
         alignItems: 'center',
-        marginBottom: '4%'
+        marginBottom: '1%'
     }
 })

@@ -9,7 +9,8 @@ import {
     Image,
     Dimensions
 } from "react-native";
-
+import { TouchableHighlight } from "react-native-gesture-handler";
+import Item from './Item'
 const EditProfile = ({navigation})=>{
     return(
         <ScrollView>
@@ -42,15 +43,7 @@ const EditProfile = ({navigation})=>{
                     marginBottom: '5%'
                 }} source={require('../../assets/coverPhoto.png')}/>
             </View>
-            <View style={{
-                borderBottomWidth: 0.5,
-                
-            }}>
-                <Text style={styles.title}>Bio</Text>
-                <Text style={{marginBottom: '5%',textAlign: 'center'}}>
-                    this is an Bio
-                </Text>
-            </View>
+            
             <View style={{             
                 borderBottomWidth: 0.5,
 
@@ -59,60 +52,27 @@ const EditProfile = ({navigation})=>{
                     Details
                 </Text>
                 <View style={{marginBottom: '5%'}} >
-                    <TouchableOpacity style={styles.detail}>
-                        <Image style={{
-                            width: '6%',
-                            height: undefined,
-                            aspectRatio: 1,
-                            marginRight: '3%'
-                        }} source={require('../../assets/icons/briefcase.png')} />
-                        <Text>Hanoi, Vietnam</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.detail}>
-                        <Image style={{
-                            width: '6%',
-                            height: undefined,
-                            aspectRatio: 1,
-                            marginRight: '3%'
-                        }} source={require('../../assets/icons/hat.png')} />
-                        <Text>Went to ...</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.detail}>
-                        <Image style={{
-                            width: '6%',
-                            height: undefined,
-                            aspectRatio: 1,
-                            marginRight: '3%'
-                        }} source={require('../../assets/icons/home.png')} />
-                        <Text>Hanoi, Vietnam</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.detail}>
-                        <Image style={{
-                            width: '6%',
-                            height: undefined,
-                            aspectRatio: 1,
-                            marginRight: '3%'
-                        }} source={require('../../assets/icons/gps.png')} />
-                        <Text>From ...</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.detail}>
-                        <Image style={{
-                            width: '6%',
-                            height: undefined,
-                            aspectRatio: 1,
-                            marginRight: '3%'
-                        }} source={require('../../assets/icons/heart.png')} />
-                        <Text>Relationship Status</Text>
-                    </TouchableOpacity>
-                    
-                    
-                    
-                    
+                    <TouchableHighlight underlayColor="#DDDDDD" onPress={()=>console.log("add function here")}>
+                        <Item img={require('../../assets/icons/briefcase.png')} title={'Hanoi, Vietnam'} />
+                    </TouchableHighlight >
+                    <TouchableHighlight underlayColor="#DDDDDD" onPress={()=>console.log("add function here")}>
+                        <Item img={require('../../assets/icons/hat.png')} title={'Went to ...'} />
+                    </TouchableHighlight >
+                    <TouchableHighlight underlayColor="#DDDDDD" onPress={()=>console.log("add function here")}>
+                        <Item img={require('../../assets/icons/home.png')} title={'Hanoi, Vietnam'} />
+                    </TouchableHighlight>
+                    <TouchableHighlight underlayColor="#DDDDDD" onPress={()=>console.log("add function here")}>
+                        <Item img={require('../../assets/icons/gps.png')} title={'From ...'} />
+                    </TouchableHighlight >
+                    <TouchableHighlight underlayColor="#DDDDDD" onPress={()=>console.log("add function here")}>
+                        <Item img={require('../../assets/icons/heart.png')} title={'Relationship Status'} /> 
+                    </TouchableHighlight >
+                                
                 </View>
                 
             </View>
             <View style={styles.aboutButtom, {marginTop: '5%',marginBottom: '5%'}}>
-                <TouchableOpacity onPress={()=>navigation.navigate('About')} style={styles.aboutButtom} >
+                <TouchableOpacity onPress={()=>console.log('end')} style={styles.aboutButtom} >
                    <View style={{
                        flexDirection: 'row',
                        justifyContent: 'center',
