@@ -18,6 +18,7 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
     const [showContainer, setContainer] = useState(true);
 
     useEffect(() => {
+        console.log(addFriendImg);
         if (isRequest === true) {
             setState('Confirm')
         } else {
@@ -201,7 +202,12 @@ const styles = StyleSheet.create({
         color: "#1E2023",
         textAlign: "center",
         fontWeight: "500"
-    }
+    },
+    avatar: {
+        height: 40, 
+        width: 40,
+        borderRadius: 40,
+    },
 });
 
 export default AddFriendList;

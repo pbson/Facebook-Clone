@@ -40,7 +40,6 @@ const Friends = ({ navigation }) => {
         })
         const json = await response.json();
         setSuggestedFriends(json.data);
-        console.log(json.data);
     }
 
     const fetchResquestedFriends = async () => {
@@ -126,7 +125,7 @@ const Friends = ({ navigation }) => {
                                     <AddFriendList
                                         isRequest={false}
                                         id={item.id}
-                                        addFriendImg={`http://${item.avatar}`}
+                                        addFriendImg={item.avatar}
                                         addFriendName={item.username}
                                     />
                                 )}

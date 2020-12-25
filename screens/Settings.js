@@ -13,8 +13,6 @@ import {
     responsiveHeight,
     responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Ionicons } from "@expo/vector-icons";
-import ActiveUserOnMessengerHome from "../components/ActiveUserOnMessengerHome";
 import Chat from "../components/Chat";
 import FeedPost from "../components/FeedPost";
 import CoverPhoto from '../assets/coverPhoto.png';
@@ -25,22 +23,43 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Watch = ({ navigation }) => {
+    const [userInfo, setUser] = useState({});
     const [data, setData] = useState([]);
 
-    const index = 0
-    const count = 20
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
+    const getUserInfo = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if (json.code !== '1000') {
+            navigation.navigate('Login')
+        } else {
+            setUser(json.data);
+        }
+    }
+
+    useEffect(() => {
+        getUserInfo()
+    }, []);
+
     const onPress1 = () =>{
         navigation.navigate('accountSetting');
     }
     const onPress2 = () =>{
-        navigation.navigate('profile');
+        navigation.navigate('Profile2');
     }
 
     const logout = async () =>{
         await AsyncStorage.removeItem('savedToken')
         navigation.navigate('Login');
     }
+<<<<<<< Updated upstream
 
     useEffect(() => {
         const url = `http://192.168.0.140:3000/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
@@ -57,6 +76,8 @@ const Watch = ({ navigation }) => {
         }
         fetchResult()
     }, []);
+=======
+>>>>>>> Stashed changes
     return (
         <ScrollView
             contentContainerStyle={{  }}
@@ -67,9 +88,9 @@ const Watch = ({ navigation }) => {
             </View>
             <TouchableOpacity onPress = {onPress2} >
             <View style = {styles.headerElement} >
-                <Image style = {styles.avatar} source = {CoverPhoto} />
+                <Image style = {styles.avatar} source = {{uri: userInfo.avatar}} />
                 <View style = {{marginLeft: 10}} >
-                    <Text style = {{fontSize: 18, fontWeight: "bold"}} >Thế Tài</Text>
+                    <Text style = {{fontSize: 18, fontWeight: "bold"}} >{userInfo.username}</Text>
                     <Text style = {{fontSize: 14, color: 'gray'}} >See your profile</Text>
                 </View>
             </View>
