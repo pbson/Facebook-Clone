@@ -17,7 +17,7 @@ import EditInfo from '../screens/editProfile/EditInfo.js'
 const ProfileNav = ()=>{
     const Stack = createStackNavigator()
     return(
-        <NavigationContainer>
+        
             <Stack.Navigator initialRouteName={'Profile'}>
             <Stack.Screen
                     name='Profile'
@@ -44,7 +44,7 @@ const ProfileNav = ()=>{
                     component={EditInfo}
             />
             </Stack.Navigator>
-        </NavigationContainer>
+        
     )
 }
 

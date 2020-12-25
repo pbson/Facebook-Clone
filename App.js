@@ -11,8 +11,6 @@ import HomeTab from './navigations/HomeTab.js'
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import EditProfile from './screens/editProfile/EditProfile.js'
-import EditInfo from './screens/editProfile/EditInfo.js'
 import Avater from './components/Avatar.js'
 import MessengerNavigator from './navigations/MessengerNavigator.js'
 
