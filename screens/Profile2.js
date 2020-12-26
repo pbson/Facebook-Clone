@@ -36,7 +36,7 @@ const Profile2 = ({ navigation }) => {
 
   const getUserInfo = async () => {
     let savedToken = await AsyncStorage.getItem('savedToken');
-    const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+    const url = `http://192.168.43.210:3000/it4788/user/get_user_info?token=${savedToken}`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -50,7 +50,7 @@ const Profile2 = ({ navigation }) => {
 
   const getFriendInfo = async () => {
     let savedToken = await AsyncStorage.getItem('savedToken');
-    const url = `http://192.168.0.140:3000/it4788/user/get_list_friends?token=${savedToken}`
+    const url = `http://192.168.43.210:3000/it4788/user/get_list_friends?token=${savedToken}`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -63,7 +63,7 @@ const Profile2 = ({ navigation }) => {
   }
 
   const getUserPost = async () => {
-    const url = `http://192.168.0.140:3000/it4788/post/get_post_user?id=${userInfo._id}&index=0&count=100`
+    const url = `http://192.168.43.210:3000/it4788/post/get_post_user?id=${userInfo._id}&index=0&count=100`
     Image
     const response = await fetch(url, {
       method: 'POST',
@@ -334,11 +334,13 @@ export default Profile2
 
 const styles = StyleSheet.create({
   userPostContainer: {
-    flex: 1
+    flex: 1,
+    height: '100%'
   },
   container: {
     flex: 1,
     backgroundColor: 'white',
+    height: '100%'
   },
   break: {
     backgroundColor: '#CCC',
@@ -499,29 +501,29 @@ const styles = StyleSheet.create({
   },
   friendContainer: {
     backgroundColor: 'white',
-    height: 150,
     width: '100%',
     marginTop: 10,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    flex: 1
   },
-  friend: {
-    backgroundColor: 'white',
-    height: '100%',
-    width: '32.5%',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  friendRow: {
-    backgroundColor: 'white',
-    height: '100%',
-    width: '98%',
-    marginTop: 4,
-    marginLeft: 4,
-    marginRight: 4,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+  // friend: {
+  //   backgroundColor: 'white',
+  //   height: '100%',
+  //   width: '32.5%',
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  // },
+  // friendRow: {
+  //   backgroundColor: 'white',
+  //   height: '100%',
+  //   width: '98%',
+  //   marginTop: 4,
+  //   marginLeft: 4,
+  //   marginRight: 4,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  // },
   imageFriend: {
     height: '75%',
     width: '100%',

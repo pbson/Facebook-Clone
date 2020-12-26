@@ -24,7 +24,7 @@ const EditProfile = ({ navigation }) => {
 
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_user_info?token=${savedToken}`
         setTimeout(() => {
 
         }, 2000);
@@ -81,7 +81,7 @@ const EditProfile = ({ navigation }) => {
     }
     const changeCover = async (ola, data) => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/set_user_info?token=${savedToken}&${ola}=${data}`
+        const url = `http://192.168.43.210:3000/it4788/user/set_user_info?token=${savedToken}&${ola}=${data}`
         console.log(url);
         try {
             const response = await fetch(url, {

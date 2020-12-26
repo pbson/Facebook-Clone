@@ -53,7 +53,7 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 
 	const likePost = async () => {
 		let savedToken = await AsyncStorage.getItem('savedToken');
-		const url = `http://192.168.0.140:3000/it4788/post/like?token=${savedToken}&id=${id}`
+		const url = `http://192.168.43.210:3000/it4788/post/like?token=${savedToken}&id=${id}`
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {

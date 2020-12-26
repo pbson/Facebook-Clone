@@ -32,7 +32,7 @@ const AllFriends = ({ route, navigation }) => {
     const count = 30
     const fetchResquestedFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_list_friends?user_id=${user_id}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_list_friends?user_id=${user_id}`
         console.log(url);
         const response = await fetch(url, {
             method: 'POST',

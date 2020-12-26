@@ -19,6 +19,7 @@ import CreatePost from "../screens/CreatePost.js"
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { LogBox } from 'react-native';
+import NoPost from "../components/NoPost"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const wait = (timeout) => {
     return new Promise(resolve => {
@@ -34,7 +35,7 @@ const Feed = ({ navigation }) => {
     const count = 100
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_user_info?token=${savedToken}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -52,7 +53,7 @@ const Feed = ({ navigation }) => {
 
     const fetchResult = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
+        const url = `http://192.168.43.210:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -95,30 +96,39 @@ const Feed = ({ navigation }) => {
                     <Text style={styles.headingText}>Watch</Text>
                 </View>
                 <View style={styles.break}></View>
-                <FlatList
-                    inverted
-                    style={styles.chatContainer}
-                    data={data}
-                    keyExtractor={({ id }, index) => id}
-                    renderItem={({ item }) => (
-                        <FeedPost
-                            navigation={navigation}
-                            avatar={item.author.avatar}
-                            id={item.id}
-                            described={item.described}
-                            username={item.author.name}
-                            created={item.created}
-                            modified={item.modified}
-                            like={item.like}
-                            comment={item.comment}
-                            image={item.image}
-                            is_liked={item.is_liked}
-                            can_edit={item.can_edit}
-                            can_comment={item.can_comment}
-                            video={item.video}
-                        />
-                    )}
-                />
+
+                {(data.length <= 0) ?
+                    <NoPost navigation={navigation}/>
+                    :
+                    <View style={{flex: 1, height: "100%"}}>
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                inverted
+                                style={styles.chatContainer}
+                                data={data}
+                                keyExtractor={({ id }, index) => id}
+                                renderItem={({ item }) => (
+                                    <FeedPost
+                                        navigation={navigation}
+                                        avatar={item.author.avatar}
+                                        id={item.id}
+                                        described={item.described}
+                                        username={item.author.name}
+                                        created={item.created}
+                                        modified={item.modified}
+                                        like={item.like}
+                                        comment={item.comment}
+                                        image={item.image}
+                                        is_liked={item.is_liked}
+                                        can_edit={item.can_edit}
+                                        can_comment={item.can_comment}
+                                        video={item.video}
+                                    />
+                                )}
+                            />
+                        </View>
+                    </View>
+                }
             </ScrollView>
         </View>
 

@@ -53,7 +53,7 @@ const setUserInfo = async () => {
     let username = `${route.params.first_name} ${route.params.last_name}`
 
     let savedToken = await AsyncStorage.getItem('savedToken');
-    const url = `http://192.168.0.140:3000/it4788/user/set_user_info?token=${savedToken}&username=${username}&city=${city}&gender=${gender}&avatar=${avatar}&cover_image=${cover_image}`
+    const url = `http://192.168.43.210:3000/it4788/user/set_user_info?token=${savedToken}&username=${username}&city=${city}&gender=${gender}&avatar=${avatar}&cover_image=${cover_image}`
     console.log(url)
     const response = await fetch(url, {
         method: 'POST',
@@ -82,7 +82,7 @@ const signupUser = async () => {
         );
     }else{
             let savedToken = await registerForPushNotificationsAsync();
-    let url = `http://192.168.0.140:3000/it4788/user/signup?phonenumber=${route.params.phone}&password=${pass}&uuid=${savedToken}`
+    let url = `http://192.168.43.210:3000/it4788/user/signup?phonenumber=${route.params.phone}&password=${pass}&uuid=${savedToken}`
     console.log(url);
     const fetchResult = async () => {
         const response = await fetch(url, {

@@ -25,13 +25,13 @@ const ChatView = ({ route }) => {
     const conversationId = route.params.conversationId
     const index = 0
     const count = 1000
-    const [socket] = io('http://192.168.0.140:3000', { transports: ['websocket'], });
+    const [socket] = io('http://192.168.43.210:3000', { transports: ['websocket'], });
     let newMessage
 
     useEffect(() => {
         const fetchResult = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            let url = `http://192.168.0.140:3000/it4788/chatsocket/get_conversation?token=${savedToken}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
+            let url = `http://192.168.43.210:3000/it4788/chatsocket/get_conversation?token=${savedToken}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

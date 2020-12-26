@@ -35,7 +35,7 @@ const UserProfile = ({ route, navigation }) => {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const getUserInfo = async () => {
-        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?user_id=${user_id}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_user_info?user_id=${user_id}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -49,7 +49,7 @@ const UserProfile = ({ route, navigation }) => {
 
     const getFriendInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_list_friends?user_id=${user_id}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_list_friends?user_id=${user_id}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -62,7 +62,7 @@ const UserProfile = ({ route, navigation }) => {
     }
 
     const getUserPost = async () => {
-        const url = `http://192.168.0.140:3000/it4788/post/get_post_user?id=${user_id}&index=0&count=100`
+        const url = `http://192.168.43.210:3000/it4788/post/get_post_user?id=${user_id}&index=0&count=100`
         Image
         const response = await fetch(url, {
             method: 'POST',

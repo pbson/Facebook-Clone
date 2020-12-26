@@ -30,7 +30,7 @@ const Notification = ({ navigation }) => {
 
     const fetchResult = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/post/get_notification?token=${savedToken}&index=0&count=10`
+        const url = `http://192.168.43.210:3000/it4788/post/get_notification?token=${savedToken}&index=0&count=10`
         const response = await fetch(url, {
             method: 'POST',
             headers: {

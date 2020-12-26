@@ -14,7 +14,7 @@ const NotificationList = ({navigation, id, type, Sender, GoalId, created, isRead
 
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}&user_id=${Sender}`
+        const url = `http://192.168.43.210:3000/it4788/user/get_user_info?token=${savedToken}&user_id=${Sender}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -28,7 +28,7 @@ const NotificationList = ({navigation, id, type, Sender, GoalId, created, isRead
 
     const setRead = async () => {
 		let savedToken = await AsyncStorage.getItem('savedToken');
-        let url = `http://192.168.0.140:3000/it4788/post/set_notification?token=${savedToken}&id=${id}`
+        let url = `http://192.168.43.210:3000/it4788/post/set_notification?token=${savedToken}&id=${id}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
