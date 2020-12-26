@@ -67,7 +67,21 @@ const setUserInfo = async () => {
 }
 
 const signupUser = async () => {
-    let savedToken = await registerForPushNotificationsAsync();
+    if (
+        pass.length < 6 ||
+        pass.length > 10 ||
+        pass.trim() === route.params.phone.trim()
+    ){
+        Alert.alert(
+            "Invalid password",
+            "Please retype a different password",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+    }else{
+            let savedToken = await registerForPushNotificationsAsync();
     let url = `http://192.168.0.140:3000/it4788/user/signup?phonenumber=${route.params.phone}&password=${pass}&uuid=${savedToken}`
     console.log(url);
     const fetchResult = async () => {
@@ -106,6 +120,7 @@ const signupUser = async () => {
             ],
             { cancelable: false }
         );
+    }
     }
 }
 

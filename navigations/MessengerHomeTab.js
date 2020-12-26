@@ -41,11 +41,6 @@ const MessengerHomeTab = () => {
                 options={{ title: "Chats" }}
                 component= {MessengerHome}
             />
-            <Tab.Screen
-                name="Users"
-                options={{ title: "Users" }}
-                component= {Users}
-            />
         </Tab.Navigator>
     )
 }

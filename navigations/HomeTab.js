@@ -39,6 +39,7 @@ const HomeTab = ({navigation}) => {
                     }
                 }
             })}
+            backBehavior = 'initialRoute'
             tabBarOptions={
                 {
                     showIcon: true,

@@ -6,7 +6,8 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    Image
+    Image,
+    BackHandler
 } from "react-native";
 import {
     responsiveFontSize,
@@ -20,7 +21,7 @@ import SettingIcon from '../assets/setting2.png';
 import LogoutIcon from '../assets/logOutIcon.png';
 import { StyleSheetManager } from "styled-components";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import MessengerNavigator from '../navigations/MessengerNavigator'
 
 const Watch = ({ navigation }) => {
     const [userInfo, setUser] = useState({});
@@ -57,7 +58,11 @@ const Watch = ({ navigation }) => {
 
     const logout = async () =>{
         await AsyncStorage.removeItem('savedToken')
-        navigation.navigate('Login');
+        navigation.navigate('Welcome');
+    }
+
+    const exitApp = async () =>{
+        BackHandler.exitApp();
     }
 
     useEffect(() => {
@@ -100,6 +105,10 @@ const Watch = ({ navigation }) => {
                 <TouchableOpacity onPress={()=>logout()} style = {styles.row2}  >
                     <Image style = {styles.logoutIcon} source = {LogoutIcon}></Image>
                     <Text style = {{fontSize: 17, fontWeight: "bold", marginLeft: 10}} >Log Out</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>exitApp()} style = {styles.row2}  >
+                    <Image style = {styles.logoutIcon} source = {LogoutIcon}></Image>
+                    <Text style = {{fontSize: 17, fontWeight: "bold", marginLeft: 10}} >Exit Application</Text>
                 </TouchableOpacity>
             </View>
             <FlatList

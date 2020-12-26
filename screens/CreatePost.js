@@ -93,8 +93,8 @@ const CreatePost = ({ navigation }) => {
     /////////////////////////////////////////////////
     const sendPost = async () => {
         console.log(images)
-        // setUploading(true)
-        // CheckConnectivity();
+        setUploading(true)
+        CheckConnectivity();
         let arr = []
         if (imagesCount!=-1 && images.length > 0) {
             for (let image of images) {

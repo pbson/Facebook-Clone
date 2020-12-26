@@ -33,7 +33,7 @@ const set=(value)=>{
 
 
                 <RadioForm
-                radio_props={[{label: 'Female', value: 'female'},{label: 'Male', value: 'male'},{label: 'Custom', value: 'custom'}]}
+                radio_props={[{label: 'Female', value: 'female'},{label: 'Male', value: 'male'}]}
                 formHorizontal={false}
                 labelHorizontal={true}
                 buttonColor={'#2196f3'}

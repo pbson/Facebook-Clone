@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -29,13 +29,34 @@ import profile from '../screens/Profile2.js'
 import passwordSetting from '../screens/PasswordSetting.js'
 import personalinfoSetting from '../screens/PersonalinfoSetting.js';
 import passChange from '../screens/PassChange.js'
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import {socket} from '../chatSocket/chatAction'
 
 const Navigator = () => {
     const Stack = createStackNavigator()
+    const [userInfo, setUser] = useState({});
+
+    const getUserInfo = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if (json.code !== '1000') {
+            navigation.navigate('Login')
+        } else {
+            setUser(json.data);
+        }
+    }
+    useEffect(() => {
+        getUserInfo()
+    }, []);
 
     return (
         <NavigationContainer>
@@ -106,7 +127,7 @@ const Navigator = () => {
                             headerLeft: () => {
                                 return <Image style={styles.image} source={
                                     {
-                                        uri: 'https://images.unsplash.com/photo-1604606354385-9f9307d45a41?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=1000'
+                                        uri: userInfo.avatar
                                     }
                                 } />
                             },
