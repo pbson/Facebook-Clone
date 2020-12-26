@@ -24,6 +24,27 @@ useEffect(()=>{
     if(phone=='') setIsNextEmail(false)
     else setIsNextEmail(true)
 })
+const checkPhoneNumber = () => {
+    const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    if (!vnf_regex.test(phone)){
+        Alert.alert(
+            "Invalid Phone number",
+            "Please retype a different phonenumber",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+    }else{
+        navigation.navigate('CreatePassword',{
+            first_name: route.params.first_name,
+            last_name: route.params.last_name,
+            date: route.params.date,
+            gender:route.params.gender,
+            phone: phone
+        })
+    }
+}
     return(
         <View style={styles.container} >
         <TouchableOpacity  style={styles.container} onPress={Keyboard.dismiss}>
@@ -48,13 +69,9 @@ useEffect(()=>{
                 
         </TouchableOpacity>
         {isNextEmail&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('CreatePassword',{
-                first_name: route.params.first_name,
-                last_name: route.params.last_name,
-                date: route.params.date,
-                gender:route.params.gender,
-                phone: phone
-            })}}  />   
+            <Button title={'Next'} color={'white'} onPress={()=>{
+                checkPhoneNumber()
+              }}  />   
             </View>}
         <View 
                 onPress={()=>navigation.navigate('Login')}

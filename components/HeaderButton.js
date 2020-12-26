@@ -7,9 +7,6 @@ const HeaderButton = () => {
   return (
     <View style={styles.headerLeftContainer}>
       <TouchableOpacity style={styles.button}>
-        <Ionicons name="ios-camera" size={responsiveFontSize(3)} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
         <Ionicons name="md-create" size={responsiveFontSize(3)} />
       </TouchableOpacity>
     </View>

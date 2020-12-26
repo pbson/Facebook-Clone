@@ -40,7 +40,7 @@ const ChatView = ({ route }) => {
                 }
             })
             const json = await response.json();
-            setData(json.data);
+            setData(json.data.reverse());
         }
         const socketFunction = () => {
             socket.connect();
@@ -102,6 +102,7 @@ const ChatView = ({ route }) => {
         <View style={styles.container}>
             <ScrollView style={styles.chatContainer} contentContainerStyle={{ flexGrow: 1 }} style={styles.chatView}>
                 <FlatList
+                    inverted
                     style={styles.chatContainer}
                     data={data}
                     renderItem={renderItem}

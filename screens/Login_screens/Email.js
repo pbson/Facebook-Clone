@@ -29,6 +29,19 @@ useEffect(()=>{
     if(phone=='') setNext(false)
     else setNext(true)
 })
+const checkPhoneNumber = () => {
+    const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    if (!vnf_regex.test(phonenumber)){
+        Alert.alert(
+            "Invalid phonenumber",
+            "Please retype a different phonenumber",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+    }
+}
     return(
         <View style={styles.container}>
         <TouchableOpacity  style={styles.container} onPress={Keyboard.dismiss}>
@@ -52,7 +65,7 @@ useEffect(()=>{
                 </View>
         </TouchableOpacity>
         {emailNext&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{console.log(route.params)}}  />   
+            <Button title={'Next'} color={'white'} onPress={()=>{console.log(route.params); checkPhoneNumber()}}  />   
             </View>}
         <View 
                 onPress={()=>navigation.navigate('Login')}

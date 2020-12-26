@@ -101,18 +101,10 @@ const MessengerHome = ({ navigation }) => {
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
         >
-            <View style={styles.searchContainer}>
-                <View style={styles.searchIconContainer}>
-                    <Ionicons
-                        name="ios-search"
-                        size={responsiveFontSize(3)}
-                        color="grey"
-                    />
-                </View>
-                <TextInput style={styles.search} placeholder="Search" />
-            </View>
             <View style={styles.activeUsersContainer}>
                 <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={true}
                     style={styles.chatContainer}
                     data={friends}
                     keyExtractor={({ id }, index) => id}
@@ -128,26 +120,29 @@ const MessengerHome = ({ navigation }) => {
                     )}
                 />
             </View>
-            <FlatList
-                style={styles.chatContainer}
-                data={conversation}
-                keyExtractor={({ id }, index) => id}
-                renderItem={({ item }) => (
-                    <Chat
-                        navigation={navigation}
-                        username={item.Partner.username}
-                        userId={userInfo.id}
-                        conversationId={item.id}
-                        partnerId={item.Partner.id}
-                        hasSeen={item.LastMessage.unread}
-                        time={item.LastMessage.created}
-                        message={item.LastMessage.message}
-                        phonenumber={item.Partner.username}
-                        proPicUrl={item.Partner.avatar}
-                        seenProPicUrl={item.Partner.avatar}
-                    />
-                )}
-            />
+            <View style={styles.chatWrapper} >
+                <FlatList
+                    style={styles.chatContainer}
+                    data={conversation}
+                    keyExtractor={({ id }, index) => id}
+                    renderItem={({ item }) => (
+                        <Chat
+                            navigation={navigation}
+                            username={item.Partner.username}
+                            userId={userInfo.id}
+                            conversationId={item.id}
+                            partnerId={item.Partner.id}
+                            hasSeen={item.LastMessage.unread}
+                            time={item.LastMessage.created}
+                            message={item.LastMessage.message}
+                            phonenumber={item.Partner.username}
+                            proPicUrl={item.Partner.avatar}
+                            seenProPicUrl={item.Partner.avatar}
+                        />
+                    )}
+                />
+            </View>
+
         </ScrollView>
     );
 };
@@ -160,29 +155,13 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingTop: 10,
     },
-    searchContainer: {
-        width: responsiveWidth(90),
-        height: responsiveHeight(5),
-        backgroundColor: "rgba(211, 211, 211, 0.2)",
-        borderRadius: 30,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: 10,
-        // backgroundColor : 'red'
-    },
-    search: {
-        flex: 1,
-    },
-    searchIconContainer: {
-        paddingHorizontal: 10,
-    },
     activeUsersContainer: {
         height: responsiveHeight(13),
         width: responsiveWidth(100),
         marginVertical: 5,
     },
     chatContainer: {
-        width: responsiveWidth(100)
+        width: responsiveWidth(100),
+        marginBottom: 10,
     }
 });

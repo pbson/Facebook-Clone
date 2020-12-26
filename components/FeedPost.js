@@ -120,7 +120,7 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 				<View style={styles.imageList}>
 					<VideoPlayer
 						videoProps={{
-							shouldPlay: true,
+							shouldPlay: false,
 							source: {
 								uri: image[0]
 							}
