@@ -31,7 +31,7 @@ const ChatView = ({ route }) => {
     useEffect(() => {
         const fetchResult = async () => {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            let url = `http://192.168.0.140:3000/it4788/chatsocket/get_conversation?token=${savedToken}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
+            let url = `http://303ef6e81cb6.ngrok.io/it4788/chatsocket/get_conversation?token=${savedToken}&partner_id=${partnerId}&conversation_id=${conversationId}&index=${index}&count=${count}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

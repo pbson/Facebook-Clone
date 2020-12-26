@@ -46,15 +46,14 @@ const set=(value)=>{
                
                           
         </TouchableOpacity>
-        {isNext&&<View style={styles.nextBtn}>
-            <Button title={'Next'} color={'white'} onPress={()=>{navigation.navigate('UserPhoneNumber',{
+        {isNext&&<TouchableOpacity onPress={()=>{navigation.navigate('UserPhoneNumber',{
                 first_name: route.params.first_name,
                 last_name: route.params.last_name,
                 date: route.params.date,
-                gender: gender
-            })}}  />   
-            </View>}
-        <View 
+                gender: gender})}} style={styles.nextBtn}>
+                        <Text style={{color: 'white'}}>Next</Text>  
+            </TouchableOpacity>}
+        <TouchableOpacity 
                 onPress={()=>navigation.navigate('Login')}
                 style={{
                     justifyContent: 'center',width: '100%',height: '7%',
@@ -63,7 +62,7 @@ const set=(value)=>{
                     borderTopWidth: 1
                     }}>
                         <Text style={{color: '#1E90FF'}}>Already have an account?</Text>
-                </View>
+                </TouchableOpacity>
         </View>
     )
 }

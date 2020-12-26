@@ -49,7 +49,7 @@ const PasswordChange = ({ navigation }) => {
             );
         }
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/change_password?token=${savedToken}&old_password=${currentPass}&new_password=${NewPassword}`
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/change_password?token=${savedToken}&old_password=${currentPass}&new_password=${NewPassword}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {

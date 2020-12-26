@@ -23,7 +23,7 @@ const NameSetting = ({ navigation }) => {
     const [userName, setUserName] = useState('');
     const changeUsername = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/set_user_info?token=${savedToken}&username=${userName}`
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/set_user_info?token=${savedToken}&username=${userName}`
         console.log(url)
         const response = await fetch(url, {
             method: 'POST',

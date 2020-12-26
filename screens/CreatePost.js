@@ -130,7 +130,7 @@ const CreatePost = ({ navigation }) => {
         }
 
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(arr),

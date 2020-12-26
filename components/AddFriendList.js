@@ -28,7 +28,7 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
     const addButtonClick = async () => {
         if (isRequest === true) {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.0.140:3000/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=1`
+            const url = `http://303ef6e81cb6.ngrok.io/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=1`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -53,7 +53,7 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
         } else {
             setState('Request sent')
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.0.140:3000/it4788/user/set_request_friend?token=${savedToken}&user_id=${id}`
+            const url = `http://303ef6e81cb6.ngrok.io/it4788/user/set_request_friend?token=${savedToken}&user_id=${id}`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -70,7 +70,7 @@ const AddFriendList = ({ id, addFriendImg, addFriendName, addFriendMutual, isReq
     const deleteButtonClick = async () => {
         if (isRequest === true) {
             let savedToken = await AsyncStorage.getItem('savedToken');
-            const url = `http://192.168.0.140:3000/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=0`
+            const url = `http://303ef6e81cb6.ngrok.io/it4788/user/set_accept_friend?token=${savedToken}&user_id=${id}&is_accept=0`
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

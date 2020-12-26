@@ -64,6 +64,22 @@ const Watch = ({ navigation }) => {
     const exitApp = async () =>{
         BackHandler.exitApp();
     }
+
+    useEffect(() => {
+        const url = `http://303ef6e81cb6.ngrok.io/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
+        const fetchResult = async () => {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            const json = await response.json();
+            setData(json.data);
+        }
+        fetchResult()
+    }, []);
     return (
         <ScrollView
             contentContainerStyle={{  }}
