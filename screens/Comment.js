@@ -19,7 +19,7 @@ const Comment = ({ route }) => {
         let comment = event.nativeEvent.text;
         let index = 0;
         let count = 1;
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/comment/set_comment?token=${savedToken}&id=${route.params.id}&index=${index}&count=${count}&comment=${comment}`
+        const url = `http://192.168.0.140:3000/it4788/comment/set_comment?token=${savedToken}&id=${route.params.id}&index=${index}&count=${count}&comment=${comment}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -39,7 +39,7 @@ const Comment = ({ route }) => {
     }
     const fetchResult = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/comment/get_comment?token=${savedToken}&id=${route.params.id}&index=${pageCurrent}&count=10`
+        const url = `http://192.168.0.140:3000/it4788/comment/get_comment?token=${savedToken}&id=${route.params.id}&index=${pageCurrent}&count=10`
         const response = await fetch(url, {
             method: 'POST',
             headers: {

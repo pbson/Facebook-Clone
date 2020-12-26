@@ -41,7 +41,6 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 		if (image.length == 1 && image[0].split('.').pop() == 'mp4') {
 			setVideo(true);
 		}
-		console.log(image)
 	}, [])
 
 	const openCommentView = () => {
@@ -54,7 +53,7 @@ const FeedPost = ({ route, navigation, avatar, id, described, username, created,
 
 	const likePost = async () => {
 		let savedToken = await AsyncStorage.getItem('savedToken');
-		const url = `http://303ef6e81cb6.ngrok.io/it4788/post/like?token=${savedToken}&id=${id}`
+		const url = `http://192.168.0.140:3000/it4788/post/like?token=${savedToken}&id=${id}`
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {

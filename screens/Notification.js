@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     FlatList,
+    RefreshControl,
     TouchableOpacity,
     Image
 } from "react-native";
@@ -15,55 +16,70 @@ import {
 } from "react-native-responsive-dimensions";
 import { Ionicons } from "@expo/vector-icons";
 import NotificationList from "../components/NotificationList";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Notification = ({ navigation }) => {
     const [data, setData] = useState([]);
 
-    const index = 0
-    const count = 20
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWY3Nzc4YjQ5NzYwZmUwMDc2M2E4YzdmIiwicGFzc3dvcmQiOiIkMmEkMTAkYXcxeGZXenJpYjVncC9PWjMxWENsZTQuZGFOOXouRDFkcEF3UGNlcGc5QXZEY3ppbC5XbUMiLCJsYXRlc3RMb2dpblRpbWUiOiIyMDIwLTEwLTMxVDAwOjI2OjU4LjI1OFoifSwiaWF0IjoxNjA3ODU2NzMwLCJleHAiOjE2MDgyMTY3MzB9.GO85wxlmyn5KxjiaSSK3ZVqL8Iv24B0FZi4zYPQQoAA'
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        });
+    }
 
+    const fetchResult = async () => {
+        let savedToken = await AsyncStorage.getItem('savedToken');
+        const url = `http://192.168.0.140:3000/it4788/post/get_notification?token=${savedToken}&index=0&count=10`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setData(json.data);
+    }
 
-    useEffect(() => {
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/chatsocket/get_list_conversation?token=${token}&index=${index}&count=${count}`
-        const fetchResult = async () => {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            const json = await response.json();
-            setData(json.data);
-        }
+    useFocusEffect(React.useCallback(() => {
         fetchResult()
-    }, []);
+    }, []))
+
+    ///////////////////////////////// Pull down to refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        fetchResult()
+    });
     return (
         <ScrollView
             contentContainerStyle={{ alignItems: "center" }}
             style={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
         >
             <View style={styles.headerContainer}>
                 <Text style={styles.headingText}>Notifications</Text>
             </View>
             <FlatList
+                inverted
                 style={styles.chatContainer}
-            />
-            <NotificationList
-                authorImg={require("../src/img/photostatus.jpg")}
-                from="Pham Ba Son"
-                to="Vu Ngoc Hien"
-                time="2 hour before"
-                isRead = {true}
-            />
-            <NotificationList
-                authorImg={require("../src/img/photostatus.jpg")}
-                from="Pham Ba Son"
-                to="Vu Ngoc Hien"
-                time="2 hour before"
-                isRead = {false}
+                data={data}
+                keyExtractor={({ id }, index) => id}
+                renderItem={({ item }) => (
+                    <NotificationList
+                        navigation={navigation}
+                        id={item._id}
+                        type={item.type}
+                        Sender={item.Sender}
+                        created={item.created}
+                        isRead={item.isRead}
+                        GoalId={item.GoalId}
+                    />
+                )}
             />
         </ScrollView>
     );

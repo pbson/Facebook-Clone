@@ -79,7 +79,6 @@ const CreatePost = ({ navigation }) => {
             if (result.type == 'video') {
                 setImagesCount(-1)
                 const newImageUri = "file:///" + result.uri.split("file:/").join("");
-                console.log({ uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() })
 
                 setImage([...images, { uri: newImageUri, type: mime.getType(newImageUri), name: newImageUri.split("/").pop() }]);
             } else {
@@ -92,7 +91,6 @@ const CreatePost = ({ navigation }) => {
     };
     /////////////////////////////////////////////////
     const sendPost = async () => {
-        console.log(images)
         setUploading(true)
         CheckConnectivity();
         let arr = []
@@ -130,7 +128,7 @@ const CreatePost = ({ navigation }) => {
         }
 
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
+        const url = `http://192.168.0.140:3000/it4788/post/add_post2?token=${savedToken}&described=${text}&status=happy`
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(arr),
@@ -154,7 +152,6 @@ const CreatePost = ({ navigation }) => {
                 { cancelable: false }
             );
         }
-
     }
     ////////////////////////////////////////////////
     const [modalVisible, setState] = useState(true)

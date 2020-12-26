@@ -7,6 +7,7 @@ import {
     TouchableHighlight,
     Alert,
     Text,
+    Keyboard
 } from "react-native";
 import {
     responsiveFontSize,
@@ -21,6 +22,7 @@ import * as Permissions from 'expo-permissions';
 const Login = ({ navigation }) => {
     const [isPhonenumberHighlighted, setPhonenumberIsHighlighted] = useState(false)
     const [isPasswordHighlighted, setPasswordIsHighlighted] = useState(false)
+    const [isKeyboard, setIsKeyboard] = useState(false)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [data, setData] = useState([]);
@@ -38,8 +40,8 @@ const Login = ({ navigation }) => {
         let token = (await Notifications.getExpoPushTokenAsync()).data;
         return token
     };
-    const setDevtoken = async(devtoken, savedToken) => {
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/set_devtoken?token=${savedToken}&devtoken=${devtoken}`
+    const setDevtoken = async (devtoken, savedToken) => {
+        const url = `http://192.168.0.140:3000/it4788/user/set_devtoken?token=${savedToken}&devtoken=${devtoken}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -48,20 +50,28 @@ const Login = ({ navigation }) => {
             }
         })
         const json = await response.json();
-        console.log(json)
     }
+    const _keyboardDidShow = () => {
+        setIsKeyboard(true)
+    };
 
-    // useEffect(
-    //     () =>
-    //         navigation.addListener('beforeRemove', (e) => {
-    //             e.preventDefault();
-    //         }),
-    //     [navigation]
-    // );
+    const _keyboardDidHide = () => {
+        setIsKeyboard(false)
+    };
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+        Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+        // cleanup function
+        return () => {
+            Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
+            Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
+        };
+    }, []);
 
     const signInUser = async () => {
         let savedToken = await registerForPushNotificationsAsync();
-        let url = `http://303ef6e81cb6.ngrok.io/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
+        let url = `http://192.168.0.140:3000/it4788/user/login?phonenumber=${username}&password=${password}&uuid=${savedToken}`
         const fetchResult = async () => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -109,8 +119,8 @@ const Login = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.bannerContainer}>
                 <ImageBackground
-                    style={isPhonenumberHighlighted || isPasswordHighlighted ? styles.WithoutBanner : styles.bannerImg}
-                    source={isPhonenumberHighlighted || isPasswordHighlighted ? require("../src/img/facebookLogo.png") : require("../src/img/banner.png")}
+                    style={isKeyboard ? styles.WithoutBanner : styles.bannerImg}
+                    source={isKeyboard ? require("../src/img/facebookLogo.png") : require("../src/img/banner.png")}
                 >
                 </ImageBackground>
             </View>

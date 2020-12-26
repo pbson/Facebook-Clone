@@ -26,6 +26,8 @@ import setting from '../screens/Settings.js';
 import accountSetting from '../screens/AccountSetting.js';
 import nameSetting from '../screens/NameSetting.js';
 import profile from '../screens/Profile2.js'
+import UserProfile from '../screens/UserProfile.js'
+import AllFriends from '../screens/AllFriends.js'
 import passwordSetting from '../screens/PasswordSetting.js'
 import personalinfoSetting from '../screens/PersonalinfoSetting.js';
 import passChange from '../screens/PassChange.js'
@@ -190,7 +192,9 @@ const Navigator = () => {
             <Stack.Screen name = 'nameSetting' component = {nameSetting} />
             <Stack.Screen name = 'profile' component = {profile} />
             <Stack.Screen name = 'passwordSetting' component = {passwordSetting} />
-            <Stack.Screen name = 'passChange' component = {passChange} />         
+            <Stack.Screen name = 'passChange' component = {passChange} />     
+            <Stack.Screen name = 'UserProfile' component = {UserProfile} />    
+            <Stack.Screen name = 'AllFriends' component = {AllFriends} />    
             </Stack.Navigator>
         </NavigationContainer>
     )

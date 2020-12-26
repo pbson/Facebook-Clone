@@ -16,35 +16,24 @@ import AddFriendList from '../components/AddFriendList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { createIconSetFromFontello } from "@expo/vector-icons";
+import Avatar from '../components/Avatar'
+
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });
 }
 
-const Friends = ({ navigation }) => {
-    const [suggestedFriends, setSuggestedFriends] = useState([]);
+const AllFriends = ({ route, navigation }) => {
     const [request, setRequest] = useState([]);
+    let user_id = route.params.user_id
 
     const index = 0
     const count = 30
-    const fetchSuggestedFriends = async () => {
-        let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_list_suggested_friends?token=${savedToken}&index=${index}&count=${count}`
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-        const json = await response.json();
-        setSuggestedFriends(json.data);
-    }
-
     const fetchResquestedFriends = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://192.168.0.140:3000/it4788/user/get_requested_friends?token=${savedToken}&index=${index}&count=${count}`
+        const url = `http://192.168.0.140:3000/it4788/user/get_list_friends?user_id=${user_id}`
+        console.log(url);
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -53,11 +42,11 @@ const Friends = ({ navigation }) => {
             }
         })
         const json = await response.json();
-        setRequest(json.data.request);
+        console.log(json);
+        setRequest(json.data.friends);
     }
     useFocusEffect(React.useCallback(() => {
         fetchResquestedFriends()
-        fetchSuggestedFriends()
     }, []))
     ///////////////////////////////// Pull down to refresh
     const [refreshing, setRefreshing] = React.useState(false);
@@ -66,7 +55,6 @@ const Friends = ({ navigation }) => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
         fetchResquestedFriends()
-        fetchSuggestedFriends()
     });
     return (
         <ScrollView
@@ -77,7 +65,11 @@ const Friends = ({ navigation }) => {
             }
         >
             <View style={styles.headerContainer}>
-                <Text style={styles.headingText}>Friends</Text>
+                <Text style={styles.headingText}>                           
+                Friends {"  "}
+                    <Text style={styles.requestFriendsLength}>
+                        {request.length}
+                    </Text></Text>
             </View>
 
             <View style={styles.addfriendContainer}>
@@ -85,13 +77,6 @@ const Friends = ({ navigation }) => {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.addfriendWrapper}>
-                        <Text style={styles.title}>
-                            Friend request {"  "}
-                            <Text style={styles.requestFriendsLength}>
-                                {request.length}
-                            </Text>
-                        </Text>
-
                         <View key={index}>
                             <FlatList
                                 style={styles.chatContainer}
@@ -99,35 +84,14 @@ const Friends = ({ navigation }) => {
                                 extraData={request}
                                 keyExtractor={({ id }, index) => id}
                                 renderItem={({ item }) => (
-                                    <AddFriendList
-                                        isRequest={true}
-                                        id={item.id}
-                                        addFriendImg={item.avatar}
-                                        addFriendName={item.username}
-                                    />
-                                )}
-                            />
-
-                        </View>
-                    </View>
-
-                    <View style={styles.addfriendWrapper}>
-                        <Text style={styles.title}>
-                            People you may know
-                        </Text>
-                        <View key={index}>
-                            <FlatList
-                                style={styles.chatContainer}
-                                data={suggestedFriends}
-                                extraData={suggestedFriends}
-                                keyExtractor={({ id }, index) => id}
-                                renderItem={({ item }) => (
-                                    <AddFriendList
-                                        isRequest={false}
-                                        id={item.id}
-                                        addFriendImg={item.avatar}
-                                        addFriendName={item.username}
-                                    />
+                                    <View style={styles.friendlistContainer}>
+                                        <Avatar url={item.avatar} />
+                                        <View style={styles.addFriendList}>
+                                            <Text style={styles.addFriendName}>
+                                                {item.username}
+                                            </Text>
+                                        </View>
+                                    </View>
                                 )}
                             />
 
@@ -142,14 +106,26 @@ const Friends = ({ navigation }) => {
     );
 };
 
-export default Friends;
+export default AllFriends;
 
 const styles = StyleSheet.create({
     requestFriendsLength: {
         marginLeft: 10,
         color: 'red'
     },
-
+    addFriendList: {
+        marginLeft: 10
+    },
+    addFriendName: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#1C1E21"
+    },
+    friendlistContainer: {
+        flexDirection: "row",
+        marginTop: 10,
+        marginBottom: 20
+    },
     headerContainer: {
         padding: 10,
         width: responsiveWidth(95),

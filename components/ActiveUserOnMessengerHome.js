@@ -19,7 +19,7 @@ const ActiveUserOnMessengerHome = ({ navigation, id, username, is_online, avatar
   const openChatView = () => {
     const fetchResult = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        let url = `http://303ef6e81cb6.ngrok.io/it4788/chatsocket/set_conversation?token=${savedToken}&partnerid=${id}`
+        let url = `http://192.168.0.140:3000/it4788/chatsocket/set_conversation?token=${savedToken}&partnerid=${id}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {

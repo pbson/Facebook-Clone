@@ -19,6 +19,8 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -27,13 +29,14 @@ const wait = (timeout) => {
 
 const Feed = ({ navigation }) => {
     const [data, setData] = useState([]);
+    const [userPost, setPost] = useState([]);
     const [userInfo, setUser] = useState({});
 
     const index = 0
     const count = 100
     const getUserInfo = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/user/get_user_info?token=${savedToken}`
+        const url = `http://192.168.0.140:3000/it4788/user/get_user_info?token=${savedToken}`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -51,7 +54,7 @@ const Feed = ({ navigation }) => {
 
     const fetchResult = async () => {
         let savedToken = await AsyncStorage.getItem('savedToken');
-        const url = `http://303ef6e81cb6.ngrok.io/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
+        const url = `http://192.168.0.140:3000/it4788/post/get_list_post?token=${savedToken}&index=${index}&count=${count}&last_id=`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -62,10 +65,23 @@ const Feed = ({ navigation }) => {
         const json = await response.json();
         setData(json.data.post);
     }
-    useEffect(() => {
+    const getUserPost = async () => {
+        const url = `http://192.168.0.140:3000/it4788/post/get_post_user?id=${userInfo._id}&index=0&count=100`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        setPost(json.data)
+    }
+    useFocusEffect(React.useCallback(() => {
         getUserInfo()
         fetchResult()
-    }, []);
+        getUserPost()
+    }, []))
     ///////////////////////////////// Pull down to refresh
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -74,6 +90,7 @@ const Feed = ({ navigation }) => {
         wait(2000).then(() => setRefreshing(false));
         getUserInfo()
         fetchResult()
+        getUserPost()
     });
     return (
         <View style={styles.container}>
@@ -92,6 +109,25 @@ const Feed = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={styles.break}></View>
+                <FlatList
+                    inverted
+                    style={styles.chatContainer}
+                    data={userPost}
+                    keyExtractor={({ id }, index) => id}
+                    renderItem={({ item }) => (
+                        <FeedPost
+                            navigation={navigation}
+                            avatar={userInfo.avatar}
+                            id={item._id}
+                            described={item.Described}
+                            username={userInfo.username}
+                            created={item.CreatedAt}
+                            image={item.Image}
+                            like={item.Like.length}
+                            comment={item.Comment.length}
+                        />
+                    )}
+                />
                 <FlatList
                     inverted
                     style={styles.chatContainer}
