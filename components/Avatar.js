@@ -18,7 +18,8 @@ const Avatar = ({url}) => {
                     style={styles.image}
                     source={
                         {
-                            uri: url
+                        
+                         uri: url
                         }
                     }
                 />
